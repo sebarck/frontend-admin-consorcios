@@ -1,0 +1,12 @@
+{
+  "name": "frontend-admin-consorcios",
+  "displayName": "frontend-admin-consorcios",
+  "expo": {
+    "name": "frontend-admin-consorcios",
+    "slug": "frontend-admin-consorcios",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
