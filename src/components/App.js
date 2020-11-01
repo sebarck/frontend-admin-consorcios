@@ -27,7 +27,7 @@ export default function App() {
     <View style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Reclamos">
-          <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Administrador de consorcios" }}>
+          <Stack.Screen name="Home" options={{ title: "Administrador de consorcios" }}>
             {props => <HomeScreen {...props} userInfo={loggedUserInfo} />}
           </Stack.Screen>
           <Stack.Screen name="Reclamos" component={ReclamosScreen} options={{ title: "Lista de reclamos" }} />
