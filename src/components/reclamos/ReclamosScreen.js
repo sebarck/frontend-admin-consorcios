@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { List } from 'react-native-paper';
 
-const Reclamos = () => {
+const ReclamosScreen = (props) => {
     return (
         <View>
             <List.Section>
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Reclamos;
+export default ReclamosScreen;
