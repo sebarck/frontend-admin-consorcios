@@ -10,7 +10,7 @@ const loggedUserInfo = {
   nombre: "Sebastian",
   apellido: "Monti",
   dni: 36826858,
-  reclamos: [
+  reclamosEnCurso: [
       {
           id: 1,
           titulo: "Boton ascensor roto 5to piso",
@@ -26,7 +26,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Reclamos">
+        <Stack.Navigator initialRouteName="Home">
           <Stack.Screen name="Home" options={{ title: "Administrador de consorcios" }}>
             {props => <HomeScreen {...props} userInfo={loggedUserInfo} />}
           </Stack.Screen>
