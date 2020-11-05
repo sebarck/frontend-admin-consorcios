@@ -1,3 +1,14 @@
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import HomeScreen from "./home/HomeScreen";
+import ReclamosScreen from "./reclamos/ReclamosScreen";
+import { Provider as PaperProvider } from 'react-native-paper';
+import AprobarReclamoScreen from "./reclamos/AprobarReclamoScreen";
+import CrearReclamoScreen from "./reclamos/CrearReclamoScreen";
+import InspeccionarReclamoScreen from "./reclamos/InspeccionarReclamoScreen";
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { StatusBar } from 'expo-status-bar';
