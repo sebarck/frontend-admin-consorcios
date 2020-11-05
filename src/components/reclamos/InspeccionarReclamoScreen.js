@@ -1,16 +1,23 @@
 import React from "react";
-import { View, StyleSheet} from "react-native";
+import { View, StyleSheet, Picker } from "react-native";
 import {
   TextInput,
   Button,
   Dialog,
   Portal,
+  Title,
+  Paragraph,
 } from "react-native-paper";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const InspeccionarReclamoScreen = () => {
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
   const showDialogAprobar = () => setVisibleAprobar(true);
   const hideDialogAprobar = () => setVisibleAprobar(false);
+
+  const [visibleActualizar, setVisibleActualizar] = React.useState(false);
+  const showDialogActualizar = () => setVisibleActualizar(true);
+  const hideDialogActualizar = () => setVisibleActualizar(false);
 
   const [visibleRechazar, setVisibleRechazar] = React.useState(false);
   const showDialogRechazar = () => setVisibleRechazar(true);
@@ -28,14 +35,6 @@ const InspeccionarReclamoScreen = () => {
         label="Tipo de reclamo"
         value={textTipoReclamo}
         onChangeText={(textTipoReclamo) => setTextTipoReclamo(textTipoReclamo)}
-        style={styles.text}
-        disabled="true"
-      />
-
-      <TextInput
-        label="Piso"
-        value={textPiso}
-        onChangeText={(textPiso) => setTextPiso(text)}
         style={styles.text}
         disabled="true"
       />
@@ -63,12 +62,25 @@ const InspeccionarReclamoScreen = () => {
         style={styles.textReclamo}
         numberOfLines={20}
         multiline={true}
-        disabled="true"
       />
 
       {/* Pendientes
       2) Falta agregar el componente para adjuntar imágenes (https://github.com/react-native-image-picker/react-native-image-picker)
       */}
+
+      <View style={styles.containerImagenes}>
+        <View style={styles.iconImagen}>
+          <Icon
+            name="camera"
+            size={30}
+            color="blue"
+            style={{ marginLeft: 20, marginBottom: 20 }}
+          />
+        </View>
+        <View style={styles.textImagen}>
+          <Paragraph>Adjuntar imágenes</Paragraph>
+          </View>
+      </View>
 
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
@@ -78,8 +90,21 @@ const InspeccionarReclamoScreen = () => {
             style={styles.buttons}
             // onPress={() => console.log("Pressed")}
             onPress={showDialogAprobar}
+            labelStyle={styles.buttonsLabel}
           >
-            Aprobar
+            Procesar
+          </Button>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            mode="contained"
+            color="blue"
+            style={styles.buttons}
+            compact="true"
+            labelStyle={styles.buttonsLabel}
+            onPress={showDialogActualizar}
+          >
+            Actualizar
           </Button>
         </View>
         <View style={styles.buttonContainer}>
@@ -87,6 +112,7 @@ const InspeccionarReclamoScreen = () => {
             mode="contained"
             color="red"
             style={styles.buttons}
+            labelStyle={styles.buttonsLabel}
             onPress={showDialogRechazar}
           >
             Rechazar
@@ -97,27 +123,15 @@ const InspeccionarReclamoScreen = () => {
       
       <Portal>
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
-          <Dialog.Title>Fecha de resolución</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-            // label="Email"
-            // value={text}
-            // onChangeText={(text) => setText(text)}
-            style={styles.fechaResolucionReclamo}
-            />
-          </Dialog.Content>
-          <Dialog.Title>Comentario</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-            // label="Email"
-            // value={text}
-            // onChangeText={(text) => setText(text)}
-            style={styles.comentarioResolucionReclamo}
-            multiline={true}
-            />
-          </Dialog.Content>
+          <Dialog.Title>Reclamo procesado</Dialog.Title>
           <Dialog.Actions>
-            <Button onPress={hideDialogAprobar}>Cancel</Button>
+            <Button onPress={() => console.log("Ok")}>Ok</Button>
+          </Dialog.Actions>
+        </Dialog>
+
+        <Dialog visible={visibleActualizar} onDismiss={hideDialogActualizar}>
+          <Dialog.Title>Reclamo actualizado</Dialog.Title>
+          <Dialog.Actions>
             <Button onPress={() => console.log("Ok")}>Ok</Button>
           </Dialog.Actions>
         </Dialog>
@@ -179,8 +193,12 @@ const styles = StyleSheet.create({
   },
 
   buttons: {
-    width: 150,
-    marginLeft: 22,
+    width: 120,
+    margin: 5,
+  },
+
+  buttonsLabel:{
+    fontSize:14,
   },
 
   container: {
@@ -191,6 +209,21 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
   },
+  containerImagenes: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom:20,
+    marginTop:20,
+  },
+  iconImagen: {
+    flex: 1,
+  },
+
+  textImagen: {
+    flex: 5,
+    marginBottom:25
+  }, 
 });
 
 export default InspeccionarReclamoScreen;
