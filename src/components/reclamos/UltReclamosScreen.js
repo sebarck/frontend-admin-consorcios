@@ -4,7 +4,7 @@ import { List, Text } from 'react-native-paper';
 
 const UltReclamosScreen = () => {
     return(
-        <View>
+        <View style={styles.list}>
         <List.Section>
             <List.Subheader >Reclamos en curso</List.Subheader>
             <List.Item
@@ -23,7 +23,10 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlignVertical: "center",
         textAlign: "center"
-    }
-});
+    },
+        list: {
+            backgroundColor: '#e8ded2'
+        }
+    });
 
 export default UltReclamosScreen;
