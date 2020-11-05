@@ -1,7 +1,14 @@
 import React from "react";
 import { View, StyleSheet, Picker } from "react-native";
-import { TextInput, Button, Dialog, Portal, Title } from "react-native-paper";
-// import { Dropdown } from "react-native-material-dropdown";
+import {
+  TextInput,
+  Button,
+  Dialog,
+  Portal,
+  Title,
+  Paragraph,
+} from "react-native-paper";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const CrearReclamoScreen = () => {
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
@@ -54,7 +61,9 @@ const CrearReclamoScreen = () => {
         <Picker.Item label="Edificio Pastor" value="edif_pastor" />
       </Picker>
 
-      <Title style={{ marginTop: 30, marginLeft: 20 }}>Departamento o área común</Title>
+      <Title style={{ marginTop: 30, marginLeft: 20 }}>
+        Departamento o área común
+      </Title>
 
       <Picker
         selectedValue={selectedValueEdificio}
@@ -80,6 +89,19 @@ const CrearReclamoScreen = () => {
       {/* Pendientes
       2) Falta agregar el componente para adjuntar imágenes (https://github.com/react-native-image-picker/react-native-image-picker)
       */}
+      <View style={styles.containerImagenes}>
+        <View style={styles.iconImagen}>
+          <Icon
+            name="camera"
+            size={30}
+            color="blue"
+            style={{ marginLeft: 20, marginBottom: 20 }}
+          />
+        </View>
+        <View style={styles.textImagen}>
+          <Paragraph>Adjuntar imágenes</Paragraph>
+          </View>
+      </View>
 
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
@@ -90,7 +112,7 @@ const CrearReclamoScreen = () => {
             // onPress={() => console.log("Pressed")}
             onPress={showDialogAprobar}
           >
-            Cargar
+            Crear
           </Button>
         </View>
         <View style={styles.buttonContainer}>
@@ -98,7 +120,7 @@ const CrearReclamoScreen = () => {
             mode="contained"
             color="red"
             style={styles.buttons}
-            onPress={showDialogRechazar}
+            onPress={() => console.log("Ok")}
           >
             Cancelar
           </Button>
@@ -107,44 +129,8 @@ const CrearReclamoScreen = () => {
 
       <Portal>
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
-          <Dialog.Title>Fecha de resolución</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-              // label="Email"
-              // value={text}
-              // onChangeText={(text) => setText(text)}
-              style={styles.fechaResolucionReclamo}
-            />
-          </Dialog.Content>
-          <Dialog.Title>Comentario</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-              // label="Email"
-              // value={text}
-              // onChangeText={(text) => setText(text)}
-              style={styles.comentarioResolucionReclamo}
-              multiline={true}
-            />
-          </Dialog.Content>
+          <Dialog.Title>Reclamo registrado</Dialog.Title>
           <Dialog.Actions>
-            <Button onPress={hideDialogAprobar}>Cancel</Button>
-            <Button onPress={() => console.log("Ok")}>Ok</Button>
-          </Dialog.Actions>
-        </Dialog>
-
-        <Dialog visible={visibleRechazar} onDismiss={hideDialogRechazar}>
-          <Dialog.Title>Motivo de rechazo</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-              // label="Email"
-              // value={text}
-              // onChangeText={(text) => setText(text)}
-              style={styles.comentarioResolucionReclamo}
-              multiline={true}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={hideDialogRechazar}>Cancel</Button>
             <Button onPress={() => console.log("Ok")}>Ok</Button>
           </Dialog.Actions>
         </Dialog>
@@ -206,6 +192,22 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
+  },
+
+  containerImagenes: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom:20,
+    marginTop:20,
+  },
+  iconImagen: {
+    flex: 1,
+  },
+
+  textImagen: {
+    flex: 5,
+    marginBottom:25
   },
 });
 
