@@ -39,7 +39,7 @@ export default function App() {
           <Stack.Screen name="Reclamos" component={ReclamosScreen} options={{ title: "Lista de reclamos" }} />
         </Stack.Navigator>
       </NavigationContainer> */}
-        <CrearReclamoScreen />
+        <InspeccionarReclamoScreen />
         <StatusBar style="auto" />
       </PaperProvider>
     </View>
