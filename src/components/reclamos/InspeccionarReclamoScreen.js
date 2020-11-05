@@ -7,7 +7,7 @@ import {
   Portal,
 } from "react-native-paper";
 
-const AprobarReclamoScreen = () => {
+const InspeccionarReclamoScreen = () => {
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
   const showDialogAprobar = () => setVisibleAprobar(true);
   const hideDialogAprobar = () => setVisibleAprobar(false);
@@ -65,6 +65,10 @@ const AprobarReclamoScreen = () => {
         multiline={true}
         disabled="true"
       />
+
+      {/* Pendientes
+      2) Falta agregar el componente para adjuntar imágenes (https://github.com/react-native-image-picker/react-native-image-picker)
+      */}
 
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
@@ -189,4 +193,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AprobarReclamoScreen;
+export default InspeccionarReclamoScreen;

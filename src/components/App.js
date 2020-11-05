@@ -7,6 +7,8 @@ import HomeScreen from "./home/HomeScreen";
 import ReclamosScreen from "./reclamos/ReclamosScreen";
 import { Provider as PaperProvider } from 'react-native-paper';
 import AprobarReclamoScreen from "./reclamos/AprobarReclamoScreen";
+import CrearReclamoScreen from "./reclamos/CrearReclamoScreen";
+import InspeccionarReclamoScreen from "./reclamos/InspeccionarReclamoScreen";
 
 const loggedUserInfo = {
   nombre: "Sebastian",
@@ -37,7 +39,7 @@ export default function App() {
           <Stack.Screen name="Reclamos" component={ReclamosScreen} options={{ title: "Lista de reclamos" }} />
         </Stack.Navigator>
       </NavigationContainer> */}
-        <AprobarReclamoScreen />
+        <CrearReclamoScreen />
         <StatusBar style="auto" />
       </PaperProvider>
     </View>

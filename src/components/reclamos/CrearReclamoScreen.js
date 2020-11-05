@@ -1,13 +1,9 @@
 import React from "react";
-import { View, StyleSheet} from "react-native";
-import {
-  TextInput,
-  Button,
-  Dialog,
-  Portal,
-} from "react-native-paper";
+import { View, StyleSheet, Picker } from "react-native";
+import { TextInput, Button, Dialog, Portal, Title } from "react-native-paper";
+// import { Dropdown } from "react-native-material-dropdown";
 
-const AprobarReclamoScreen = () => {
+const CrearReclamoScreen = () => {
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
   const showDialogAprobar = () => setVisibleAprobar(true);
   const hideDialogAprobar = () => setVisibleAprobar(false);
@@ -16,45 +12,61 @@ const AprobarReclamoScreen = () => {
   const showDialogRechazar = () => setVisibleRechazar(true);
   const hideDialogRechazar = () => setVisibleRechazar(false);
 
-  const [textTipoReclamo, setTextTipoReclamo] = React.useState("");
-  const [textPiso, setTextPiso] = React.useState("");
-  const [textEdificio, setTextEdificio] = React.useState("");
   const [textDptoArea, setTextDptoArea] = React.useState("");
   const [textReclamo, setTextReclamo] = React.useState("");
 
+  const [
+    selectedValueTipoReclamo,
+    setSelectedValueTipoReclamo,
+  ] = React.useState("");
+
+  const [selectedValueEdificio, setSelectedValueEdificio] = React.useState("");
+
   return (
     <View>
-      <TextInput
-        label="Tipo de reclamo"
-        value={textTipoReclamo}
-        onChangeText={(textTipoReclamo) => setTextTipoReclamo(textTipoReclamo)}
-        style={styles.text}
-        disabled="true"
-      />
+      <Title style={{ marginTop: 30, marginLeft: 20 }}>Tipo de reclamo</Title>
 
-      <TextInput
-        label="Piso"
-        value={textPiso}
-        onChangeText={(textPiso) => setTextPiso(text)}
-        style={styles.text}
-        disabled="true"
-      />
+      <Picker
+        selectedValue={selectedValueTipoReclamo}
+        style={{ marginLeft: 20, height: 50, width: 360, marginRight: 20 }}
+        onValueChange={(itemValue, itemIndex) =>
+          setSelectedValueTipoReclamo(itemValue)
+        }
+      >
+        <Picker.Item label="Seleccione una opción..." value="0" color="grey" />
+        <Picker.Item label="Electricidad" value="electricidad" />
+        <Picker.Item label="Plomeria" value="plomeria" />
+        <Picker.Item label="General" value="general" />
+      </Picker>
 
-      <TextInput
-        label="Edificio"
-        value={textEdificio}
-        onChangeText={(textEdificio) => setTextEdificio(textEdificio)}
-        style={styles.text}
-        disabled="true"
-      />
+      <Title style={{ marginTop: 30, marginLeft: 20 }}>Edificio</Title>
 
-      <TextInput
-        label="Departamento, área común, etc"
-        value={textDptoArea}
-        onChangeText={(textDptoArea) => setTextDptoArea(textDptoArea)}
-        style={styles.text}
-        disabled="true"
-      />
+      <Picker
+        selectedValue={selectedValueEdificio}
+        style={{ marginLeft: 20, height: 50, width: 360, marginRight: 20 }}
+        onValueChange={(itemValueEdificio, itemIndexEdficio) =>
+          setSelectedValueEdificio(itemValueEdificio)
+        }
+      >
+        <Picker.Item label="Seleccione una opción..." value="0" color="grey" />
+        <Picker.Item label="Edificio Monti" value="edif_monti" />
+        <Picker.Item label="Edificio Dominici" value="edif_dominici" />
+        <Picker.Item label="Edificio Pastor" value="edif_pastor" />
+      </Picker>
+
+      <Title style={{ marginTop: 30, marginLeft: 20 }}>Departamento o área común</Title>
+
+      <Picker
+        selectedValue={selectedValueEdificio}
+        style={{ marginLeft: 20, height: 50, width: 360, marginRight: 20 }}
+        onValueChange={(itemValueEdificio, itemIndexEdficio) =>
+          setSelectedValueEdificio(itemValueEdificio)
+        }
+      >
+        <Picker.Item label="Seleccione una opción..." value="0" color="grey" />
+        <Picker.Item label="Dpto 1A" value="edif_monti" />
+        <Picker.Item label="Área común" value="edif_dominici" />
+      </Picker>
 
       <TextInput
         label="Descripción del reclamo"
@@ -63,8 +75,11 @@ const AprobarReclamoScreen = () => {
         style={styles.textReclamo}
         numberOfLines={20}
         multiline={true}
-        disabled="true"
       />
+
+      {/* Pendientes
+      2) Falta agregar el componente para adjuntar imágenes (https://github.com/react-native-image-picker/react-native-image-picker)
+      */}
 
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
@@ -75,7 +90,7 @@ const AprobarReclamoScreen = () => {
             // onPress={() => console.log("Pressed")}
             onPress={showDialogAprobar}
           >
-            Aprobar
+            Cargar
           </Button>
         </View>
         <View style={styles.buttonContainer}>
@@ -85,31 +100,30 @@ const AprobarReclamoScreen = () => {
             style={styles.buttons}
             onPress={showDialogRechazar}
           >
-            Rechazar
+            Cancelar
           </Button>
         </View>
       </View>
-      
-      
+
       <Portal>
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
           <Dialog.Title>Fecha de resolución</Dialog.Title>
           <Dialog.Content>
             <TextInput
-            // label="Email"
-            // value={text}
-            // onChangeText={(text) => setText(text)}
-            style={styles.fechaResolucionReclamo}
+              // label="Email"
+              // value={text}
+              // onChangeText={(text) => setText(text)}
+              style={styles.fechaResolucionReclamo}
             />
           </Dialog.Content>
           <Dialog.Title>Comentario</Dialog.Title>
           <Dialog.Content>
             <TextInput
-            // label="Email"
-            // value={text}
-            // onChangeText={(text) => setText(text)}
-            style={styles.comentarioResolucionReclamo}
-            multiline={true}
+              // label="Email"
+              // value={text}
+              // onChangeText={(text) => setText(text)}
+              style={styles.comentarioResolucionReclamo}
+              multiline={true}
             />
           </Dialog.Content>
           <Dialog.Actions>
@@ -122,11 +136,11 @@ const AprobarReclamoScreen = () => {
           <Dialog.Title>Motivo de rechazo</Dialog.Title>
           <Dialog.Content>
             <TextInput
-            // label="Email"
-            // value={text}
-            // onChangeText={(text) => setText(text)}
-            style={styles.comentarioResolucionReclamo}
-            multiline={true}
+              // label="Email"
+              // value={text}
+              // onChangeText={(text) => setText(text)}
+              style={styles.comentarioResolucionReclamo}
+              multiline={true}
             />
           </Dialog.Content>
           <Dialog.Actions>
@@ -160,6 +174,12 @@ const styles = StyleSheet.create({
     height: 200,
   },
 
+  dropdownReclamo: {
+    marginLeft: 20,
+    marginRight: 20,
+    width: 10,
+  },
+
   fechaResolucionReclamo: {
     color: "red",
     fontWeight: "bold",
@@ -189,4 +209,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AprobarReclamoScreen;
+export default CrearReclamoScreen;
