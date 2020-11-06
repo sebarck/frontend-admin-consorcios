@@ -5,18 +5,11 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import HomeScreen from "./home/HomeScreen";
 import ReclamosScreen from "./reclamos/ReclamosScreen";
-import { Provider as PaperProvider } from 'react-native-paper';
 import AprobarReclamoScreen from "./reclamos/AprobarReclamoScreen";
 import CrearReclamoScreen from "./reclamos/CrearReclamoScreen";
 import InspeccionarReclamoScreen from "./reclamos/InspeccionarReclamoScreen";
-import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import HomeScreen from './home/HomeScreen';
-import ReclamosScreen from './reclamos/ReclamosScreen';
 
 const loggedUserInfo = {
   nombre: "Sebastian",
@@ -48,19 +41,6 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
-<<<<<<< HEAD
-    <View style={styles.container}>
-      <PaperProvider>
-        {/* <NavigationContainer>
-        <Stack.Navigator initialRouteName="Reclamos">
-          <Stack.Screen name="Home" options={{ title: "Administrador de consorcios" }}>
-            {props => <HomeScreen {...props} userInfo={loggedUserInfo} />}
-          </Stack.Screen>
-          <Stack.Screen name="Reclamos" component={ReclamosScreen} options={{ title: "Lista de reclamos" }} />
-        </Stack.Navigator>
-      </NavigationContainer> */}
-        <InspeccionarReclamoScreen />
-=======
     <PaperProvider theme={theme}>
       <View style={styles.container}>
         <NavigationContainer>
@@ -71,7 +51,6 @@ export default function App() {
             <Drawer.Screen name="Listado reclamos" component={ReclamosScreen} />
           </Drawer.Navigator>
         </NavigationContainer>
->>>>>>> 04f7f4be0c6fada14ca0d367a04839bf536b9ca9
         <StatusBar style="auto" />
       </View>
     </PaperProvider >
