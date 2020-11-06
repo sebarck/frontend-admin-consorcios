@@ -28,14 +28,6 @@ const AprobarReclamoScreen = () => {
       />
 
       <TextInput
-        label="Piso"
-        value={textPiso}
-        onChangeText={(textPiso) => setTextPiso(text)}
-        style={styles.text}
-        disabled="true"
-      />
-
-      <TextInput
         label="Edificio"
         value={textEdificio}
         onChangeText={(textEdificio) => setTextEdificio(textEdificio)}
