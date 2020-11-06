@@ -10,7 +10,7 @@ import {
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const CrearReclamoScreen = () => {
+const CrearReclamoScreen = (props) => {
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
   const showDialogAprobar = () => setVisibleAprobar(true);
   const hideDialogAprobar = () => setVisibleAprobar(false);
@@ -26,6 +26,11 @@ const CrearReclamoScreen = () => {
     selectedValueTipoReclamo,
     setSelectedValueTipoReclamo,
   ] = React.useState("");
+
+  const handleCrearReclamo = () => {
+    hideDialogAprobar();
+    props.navigation.navigate('Inicio');
+  };
 
   const [selectedValueEdificio, setSelectedValueEdificio] = React.useState("");
 
@@ -100,7 +105,7 @@ const CrearReclamoScreen = () => {
         </View>
         <View style={styles.textImagen}>
           <Paragraph>Adjuntar imágenes</Paragraph>
-          </View>
+        </View>
       </View>
 
       <View style={styles.container}>
@@ -120,7 +125,7 @@ const CrearReclamoScreen = () => {
             mode="contained"
             color="red"
             style={styles.buttons}
-            onPress={() => console.log("Ok")}
+            onPress={() => props.navigation.navigate('Inicio')}
           >
             Cancelar
           </Button>
@@ -131,7 +136,7 @@ const CrearReclamoScreen = () => {
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
           <Dialog.Title>Reclamo registrado</Dialog.Title>
           <Dialog.Actions>
-            <Button onPress={() => console.log("Ok")}>Ok</Button>
+            <Button onPress={() => handleCrearReclamo()}>OK</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -198,8 +203,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom:20,
-    marginTop:20,
+    marginBottom: 20,
+    marginTop: 20,
   },
   iconImagen: {
     flex: 1,
@@ -207,7 +212,7 @@ const styles = StyleSheet.create({
 
   textImagen: {
     flex: 5,
-    marginBottom:25
+    marginBottom: 25
   },
 });
 

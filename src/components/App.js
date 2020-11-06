@@ -1,32 +1,36 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import HomeScreen from "./home/HomeScreen";
 import ReclamosScreen from "./reclamos/ReclamosScreen";
-import { Provider as PaperProvider } from 'react-native-paper';
 import AprobarReclamoScreen from "./reclamos/AprobarReclamoScreen";
 import CrearReclamoScreen from "./reclamos/CrearReclamoScreen";
 import InspeccionarReclamoScreen from "./reclamos/InspeccionarReclamoScreen";
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import HomeScreen from './home/HomeScreen';
-import ReclamosScreen from './reclamos/ReclamosScreen';
 
 const loggedUserInfo = {
   nombre: "Sebastian",
   apellido: "Monti",
   dni: 36826858,
+  tipo: "cliente",
   reclamosEnCurso: [
     {
       id: 1,
       titulo: "Boton ascensor roto 5to piso",
       descripcion: "Se encontró que el boton del 5to piso no está funcionando, impidiendo solicitar el ascensor",
+      estado: "INSPECCIÓN"
+    },
+    {
+      id: 2,
+      titulo: "Rajadura de mamposteria",
+      descripcion: "Actualmente la unidad funcional se encuentra con una rajadura interna",
+      estado: "INSPECCIÓN"
+    },
+    {
+      id: 3,
+      titulo: "Rajadura de mamposteria",
+      descripcion: "Actualmente la unidad funcional se encuentra con una rajadura interna",
       estado: "INSPECCIÓN"
     }
   ]
@@ -48,19 +52,6 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
-<<<<<<< HEAD
-    <View style={styles.container}>
-      <PaperProvider>
-        {/* <NavigationContainer>
-        <Stack.Navigator initialRouteName="Reclamos">
-          <Stack.Screen name="Home" options={{ title: "Administrador de consorcios" }}>
-            {props => <HomeScreen {...props} userInfo={loggedUserInfo} />}
-          </Stack.Screen>
-          <Stack.Screen name="Reclamos" component={ReclamosScreen} options={{ title: "Lista de reclamos" }} />
-        </Stack.Navigator>
-      </NavigationContainer> */}
-        <InspeccionarReclamoScreen />
-=======
     <PaperProvider theme={theme}>
       <View style={styles.container}>
         <NavigationContainer>
@@ -68,11 +59,14 @@ export default function App() {
             <Drawer.Screen name="Inicio">
               {props => <HomeScreen {...props} userInfo={loggedUserInfo} />}
             </Drawer.Screen>
-            <Drawer.Screen name="Listado reclamos" component={ReclamosScreen} />
+            <Drawer.Screen name="Crear reclamo" component={CrearReclamoScreen} />
+            <Drawer.Screen name="Listado reclamos">
+              {props => <ReclamosScreen {...props} userInfo={loggedUserInfo} />}
+            </Drawer.Screen>
+            <Drawer.Screen name="Aprobacion reclamos" component={AprobarReclamoScreen} />
+            <Drawer.Screen name="Reclamos a validar" component={InspeccionarReclamoScreen} />
           </Drawer.Navigator>
         </NavigationContainer>
->>>>>>> 04f7f4be0c6fada14ca0d367a04839bf536b9ca9
-        <StatusBar style="auto" />
       </View>
     </PaperProvider >
   );
