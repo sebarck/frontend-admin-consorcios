@@ -3,10 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import { List } from 'react-native-paper';
 import UltReclamosScreen from './UltReclamosScreen';
 
-const ReclamosScreen = (props) => {
+const ReclamosScreen = ({userInfo}) => {
     return (
         <View style={styles.list}>
-            <UltReclamosScreen />
+            <UltReclamosScreen props={userInfo} />
             <List.Section>
                 <List.Subheader>Reclamos cerrados</List.Subheader>
             </List.Section>

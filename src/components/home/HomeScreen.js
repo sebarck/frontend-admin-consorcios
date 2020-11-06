@@ -14,12 +14,12 @@ const HomeScreen = ({ navigation, userInfo }) => {
                     <ReclamosEnCursoText reclamosEnCurso={userInfo.reclamosEnCurso.length} />
                 </Card.Content>
             </Card>
-            <UltReclamosScreen />
+            <UltReclamosScreen userInfo={userInfo} />
             <FAB
                 style={style.fab}
                 label="Crear nuevo reclamo"
                 icon="pencil-plus-outline"
-                onPress={() => navigation.navigate('Listado reclamos')}
+                onPress={() => navigation.navigate('Crear reclamo')}
             />
         </View>
     );
