@@ -55,13 +55,6 @@ export default function App() {
     <PaperProvider theme={theme}>
       <View style={styles.container}>
         <NavigationContainer>
-          {/*           <Appbar.Header>
-            <Appbar.Action
-              icon="menu"
-              onPress={() => props.navigation.openDrawer()}
-            />
-            <Appbar.Content title="Administrador de consorcios" />
-          </Appbar.Header> */}
           <Drawer.Navigator initialRouteName="Inicio" >
             <Drawer.Screen name="Inicio">
               {props => <HomeScreen {...props} userInfo={loggedUserInfo} />}

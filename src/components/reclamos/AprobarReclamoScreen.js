@@ -1,11 +1,6 @@
 import React from "react";
-import { View, StyleSheet} from "react-native";
-import {
-  TextInput,
-  Button,
-  Dialog,
-  Portal,
-} from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { TextInput, Button, Dialog, Portal, Card } from "react-native-paper";
 
 const AprobarReclamoScreen = () => {
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
@@ -81,27 +76,26 @@ const AprobarReclamoScreen = () => {
           </Button>
         </View>
       </View>
-      
-      
+
       <Portal>
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
           <Dialog.Title>Fecha de resolución</Dialog.Title>
           <Dialog.Content>
             <TextInput
-            // label="Email"
-            // value={text}
-            // onChangeText={(text) => setText(text)}
-            style={styles.fechaResolucionReclamo}
+              // label="Email"
+              // value={text}
+              // onChangeText={(text) => setText(text)}
+              style={styles.fechaResolucionReclamo}
             />
           </Dialog.Content>
           <Dialog.Title>Comentario</Dialog.Title>
           <Dialog.Content>
             <TextInput
-            // label="Email"
-            // value={text}
-            // onChangeText={(text) => setText(text)}
-            style={styles.comentarioResolucionReclamo}
-            multiline={true}
+              // label="Email"
+              // value={text}
+              // onChangeText={(text) => setText(text)}
+              style={styles.comentarioResolucionReclamo}
+              multiline={true}
             />
           </Dialog.Content>
           <Dialog.Actions>
@@ -114,11 +108,11 @@ const AprobarReclamoScreen = () => {
           <Dialog.Title>Motivo de rechazo</Dialog.Title>
           <Dialog.Content>
             <TextInput
-            // label="Email"
-            // value={text}
-            // onChangeText={(text) => setText(text)}
-            style={styles.comentarioResolucionReclamo}
-            multiline={true}
+              // label="Email"
+              // value={text}
+              // onChangeText={(text) => setText(text)}
+              style={styles.comentarioResolucionReclamo}
+              multiline={true}
             />
           </Dialog.Content>
           <Dialog.Actions>
