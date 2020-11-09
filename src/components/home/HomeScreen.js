@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation, userInfo }) => {
 const style = StyleSheet.create({
     fab: {
         position: 'relative',
-        margin: 60,
+        margin: 20,
       }
 });
 

@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native';
 import { List, Text } from 'react-native-paper';
 
 const ReclamosAbiertosList = (props) => {
-    console.log(props.reclamos);
     return props.reclamos.map((reclamo) => {
         return (
             <View>
@@ -11,7 +10,9 @@ const ReclamosAbiertosList = (props) => {
                     title={reclamo.titulo}
                     description={reclamo.descripcion}
                     left={() => <Text style={styles.status}>{reclamo.estado}</Text>}
-                    right={() => <List.Icon icon="eye-outline" />} />
+                    right={() => <List.Icon icon="eye-outline" />}
+                    key={reclamo.id}
+                    />
             </View>
         );
     });
