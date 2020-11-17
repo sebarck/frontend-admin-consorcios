@@ -27,6 +27,9 @@ const CrearReclamoScreen = (props) => {
   const [textReclamo, setTextReclamo] = React.useState("");
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isSuccess, setIsSuccess] = React.useState(true);
+  const [errorDetail, setErrorDetail] = React.useState("");
+  const [idReclamoCreado, setIdReclamoCreado] = React.useState("");
   const mostrarSpinner = () => setIsLoading(true);
   const ocultarSpinner = () => setIsLoading(false);
 
@@ -44,6 +47,8 @@ const CrearReclamoScreen = (props) => {
 
   const handleCerrarDialogSuccess = () => {
     hideDialogAprobar();
+    setErrorDetail("");
+    setIdReclamoCreado("");
     props.navigation.navigate('Inicio');
   }
 
@@ -53,13 +58,17 @@ const CrearReclamoScreen = (props) => {
       "headers": {
         "content-type": "application/json"
       }
-    }).then(function (response) {
-      console.log(response);
+    }).then((response) => {
+      //console.log(response);
+      setIsSuccess(true);
+      setIdReclamoCreado(response.data.id);
       ocultarSpinner();
       showDialogAprobar();
-    }).catch(function (error) {
+    }).catch((error) => {
+      setErrorDetail(error.response.data.error);
+      setIsSuccess(false);
       ocultarSpinner();
-      console.log(error);
+      showDialogAprobar();
     });
   };
 
@@ -164,7 +173,25 @@ const CrearReclamoScreen = (props) => {
         </View>)}
       <Portal>
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
-          <Dialog.Title>Reclamo registrado</Dialog.Title>
+          {isSuccess
+            ? (
+              <View>
+                <Dialog.Title>Reclamo registrado!</Dialog.Title>
+                <Dialog.Content>
+                  <Paragraph>Registramos el reclamo correctamente con el numero: {idReclamoCreado}</Paragraph>
+                </Dialog.Content>
+              </View>
+            )
+            : (
+              <View>
+                <Dialog.Title>Ups! Hubo un problema! </Dialog.Title>
+                <Dialog.Content>
+                  <Paragraph>Lamentablemente hubo un problema al intentar registrar el reclamo. </Paragraph>
+                  <Paragraph>Por favor, pasale el siguiente detalle al administrador: {errorDetail}</Paragraph>
+                </Dialog.Content>
+              </View>
+            )
+          }
           <Dialog.Actions>
             <Button onPress={() => handleCerrarDialogSuccess()}>OK</Button>
           </Dialog.Actions>

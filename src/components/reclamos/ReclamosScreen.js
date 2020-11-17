@@ -1,22 +1,23 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { List } from 'react-native-paper';
 import UltReclamosScreen from './UltReclamosScreen';
 
 const ReclamosScreen = ({userInfo}) => {
+    console.log(userInfo);
     return (
-        <View style={styles.list}>
-            <UltReclamosScreen props={userInfo} />
-            <List.Section>
+        <ScrollView style={styles.list}>
+            <UltReclamosScreen userInfo={userInfo} cantVisible={100} />
+            <List.Section style={{flex:6}}>
                 <List.Subheader>Reclamos cerrados</List.Subheader>
             </List.Section>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     list: {
-        backgroundColor: '#e8ded2'
+        flex: 1
     }
 });
 
