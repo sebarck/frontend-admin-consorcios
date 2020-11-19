@@ -43,10 +43,10 @@ const theme = {
   roundness: 4,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#e8ded2',
+    primary: '#c6b497',
     background: '#e8ded2',
-    accent: '#5eaaa8',
-    surface: '#a3d2ca',
+    accent: '#34626c',
+    surface: '#839b97',
   }
 };
 
