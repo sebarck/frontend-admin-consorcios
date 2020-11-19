@@ -1,18 +1,21 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { List, Text } from 'react-native-paper';
+import { StyleSheet, ScrollView, View } from 'react-native';
+import { Divider, List, Text } from 'react-native-paper';
 
 const ReclamosAbiertosList = (props) => {
-    console.log(props.reclamos);
-    return props.reclamos.map((reclamo) => {
+    return props.reclamos.slice(0, props.cantVisible).map((reclamo) => {
         return (
-            <View>
+            <ScrollView>
                 <List.Item
                     title={reclamo.titulo}
                     description={reclamo.descripcion}
                     left={() => <Text style={styles.status}>{reclamo.estado}</Text>}
-                    right={() => <List.Icon icon="eye-outline" />} />
-            </View>
+                    right={() => <List.Icon icon="eye-outline" />}
+                    onPress={() => props.navigation.navigate("Detalle", { reclamo: reclamo })}
+                    key={reclamo}
+                />
+                <Divider />
+            </ScrollView>
         );
     });
 };

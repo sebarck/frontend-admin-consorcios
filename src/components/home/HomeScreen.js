@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Card, FAB, Title } from 'react-native-paper';
+import { StyleSheet, ScrollView, View } from 'react-native';
+import { Button, Card, FAB, Title } from 'react-native-paper';
 import UltReclamosScreen from '../reclamos/UltReclamosScreen';
 import ReclamosEnCursoText from './utils/ReclamosEnCursoText';
 
@@ -14,7 +14,12 @@ const HomeScreen = ({ navigation, userInfo }) => {
                     <ReclamosEnCursoText reclamosEnCurso={userInfo.reclamosEnCurso.length} />
                 </Card.Content>
             </Card>
-            <UltReclamosScreen userInfo={userInfo} />
+            <UltReclamosScreen userInfo={userInfo} cantVisible={3} navigation={navigation} />
+            <Button
+                mode="contained"
+                onPress={() => navigation.navigate('Listado reclamos')}>
+                Ver todos
+            </Button>
             <FAB
                 style={style.fab}
                 label="Crear nuevo reclamo"
@@ -28,8 +33,8 @@ const HomeScreen = ({ navigation, userInfo }) => {
 const style = StyleSheet.create({
     fab: {
         position: 'relative',
-        margin: 60,
-      }
+        margin: 20,
+    }
 });
 
 export default HomeScreen;

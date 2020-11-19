@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, ScrollView, View } from "react-native";
 import HomeScreen from "./home/HomeScreen";
 import ReclamosScreen from "./reclamos/ReclamosScreen";
 import AprobarReclamoScreen from "./reclamos/AprobarReclamoScreen";
@@ -8,8 +8,10 @@ import CrearReclamoScreen from "./reclamos/CrearReclamoScreen";
 import InspeccionarReclamoScreen from "./reclamos/InspeccionarReclamoScreen";
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import DetalleReclamoScreen from "./reclamos/detalle/DetalleReclamoScreen";
 
 const loggedUserInfo = {
+  idViviente: 1,
   nombre: "Sebastian",
   apellido: "Monti",
   dni: 36826858,
@@ -41,10 +43,10 @@ const theme = {
   roundness: 4,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#e8ded2',
+    primary: '#c6b497',
     background: '#e8ded2',
-    accent: '#5eaaa8',
-    surface: '#a3d2ca',
+    accent: '#34626c',
+    surface: '#839b97',
   }
 };
 
@@ -65,6 +67,10 @@ export default function App() {
             </Drawer.Screen>
             <Drawer.Screen name="Aprobacion reclamos" component={AprobarReclamoScreen} />
             <Drawer.Screen name="Reclamos a validar" component={InspeccionarReclamoScreen} />
+            <Drawer.Screen name="Detalle" options={{ drawerLabel: "Detalle Reclamos" }}>
+              {props => <DetalleReclamoScreen {...props} />}
+            </Drawer.Screen>
+
           </Drawer.Navigator>
         </NavigationContainer>
       </View>

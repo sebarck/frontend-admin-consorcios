@@ -1,22 +1,64 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { List, Text } from 'react-native-paper';
+import React, { useEffect } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Colors, List, Subheading, Text } from 'react-native-paper';
+import backendAdminConsorcios from '../../apis/backendAdminConsorcios';
 import ReclamosAbiertosList from './abiertos/ReclamosAbiertosList';
 
 const UltReclamosScreen = (props) => {
-    console.log(props);
-    console.log(props.userInfo.reclamosEnCurso);
+    const [reclamosEnCurso, setReclamosEnCurso] = React.useState([]);
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    // console.log(props);
+    // console.log(props.userInfo.reclamosEnCurso);
+
+    useEffect(() => {
+        let mounted = true;
+
+        async function ObtenerReclamosViviente(props) {
+            setIsLoading(true);
+            backendAdminConsorcios.get('/reclamos/viviente/' + props.userInfo.idViviente, {
+                "headers": {
+                    "content-type": "application/json"
+                }
+            }).then((response) => {
+                //console.log(response.data);
+                if (mounted) {
+                    setReclamosEnCurso(response.data);
+                    setIsLoading(false);
+                }
+            }).catch((error) => {
+                setIsLoading(false);
+                console.log(error.response.data.error)
+            }
+            )
+        };
+
+        ObtenerReclamosViviente(props);
+
+        return () => mounted = false;
+
+    }, [props]);
+
     return (
-        <View style={styles.list}>
+        <ScrollView style={styles.list}>
             <List.Section>
-                <List.Subheader >Reclamos en curso</List.Subheader>
-                <ReclamosAbiertosList reclamos={props.userInfo.reclamosEnCurso} />
+                <List.Subheader>Reclamos en curso</List.Subheader>
+                {isLoading
+                    ? (
+                        <View style={{alignItems: 'center'}}>
+                            <Subheading style={{fontWeight: 'bold'}}>Estamos recuperando tus reclamos</Subheading>
+                            <ActivityIndicator animating={true} color={Colors.red800} size={"small"} />
+                        </View>
+                    )
+                    : <ReclamosAbiertosList reclamos={reclamosEnCurso} cantVisible={props.cantVisible} navigation={props.navigation} />
+                }
             </List.Section>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
+    flex: 1,
     status: {
         color: "red",
         fontWeight: "bold",

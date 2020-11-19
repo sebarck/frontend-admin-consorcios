@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Picker } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import {
   TextInput,
   Button,
@@ -7,8 +8,11 @@ import {
   Portal,
   Title,
   Paragraph,
+  ActivityIndicator,
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+import backendAdminConsorcios from "../../apis/backendAdminConsorcios";
 
 const CrearReclamoScreen = (props) => {
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
@@ -22,20 +26,54 @@ const CrearReclamoScreen = (props) => {
   const [textDptoArea, setTextDptoArea] = React.useState("");
   const [textReclamo, setTextReclamo] = React.useState("");
 
-  const [
-    selectedValueTipoReclamo,
-    setSelectedValueTipoReclamo,
-  ] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isSuccess, setIsSuccess] = React.useState(true);
+  const [errorDetail, setErrorDetail] = React.useState("");
+  const [idReclamoCreado, setIdReclamoCreado] = React.useState("");
+  const mostrarSpinner = () => setIsLoading(true);
+  const ocultarSpinner = () => setIsLoading(false);
 
-  const handleCrearReclamo = () => {
-    hideDialogAprobar();
-    props.navigation.navigate('Inicio');
-  };
-
+  const [selectedValueTipoReclamo, setSelectedValueTipoReclamo,] = React.useState("");
   const [selectedValueEdificio, setSelectedValueEdificio] = React.useState("");
 
+  const params = JSON.stringify({
+    "categoria": selectedValueTipoReclamo,
+    "titulo": "Arreglos generales",
+    "descripcion": textReclamo,
+    "edificio": { "id": 1 },
+    "propiedad": { "id": 1 },
+    "viviente": { "id": 1 }
+  });
+
+  const handleCerrarDialogSuccess = () => {
+    hideDialogAprobar();
+    setErrorDetail("");
+    setIdReclamoCreado("");
+    props.navigation.navigate('Inicio');
+  }
+
+  const handleCrearReclamo = async () => {
+    mostrarSpinner();
+    response = await backendAdminConsorcios.post('/reclamos', params, {
+      "headers": {
+        "content-type": "application/json"
+      }
+    }).then((response) => {
+      //console.log(response);
+      setIsSuccess(true);
+      setIdReclamoCreado(response.data.id);
+      ocultarSpinner();
+      showDialogAprobar();
+    }).catch((error) => {
+      setErrorDetail(error.response.data.error);
+      setIsSuccess(false);
+      ocultarSpinner();
+      showDialogAprobar();
+    });
+  };
+
   return (
-    <View>
+    <ScrollView>
       <Title style={{ marginTop: 30, marginLeft: 20 }}>Tipo de reclamo</Title>
 
       <Picker
@@ -108,39 +146,58 @@ const CrearReclamoScreen = (props) => {
         </View>
       </View>
 
-      <View style={styles.container}>
-        <View style={styles.buttonContainer}>
-          <Button
-            mode="contained"
-            color="green"
-            style={styles.buttons}
-            // onPress={() => console.log("Pressed")}
-            onPress={showDialogAprobar}
-          >
-            Crear
-          </Button>
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button
-            mode="contained"
-            color="red"
-            style={styles.buttons}
-            onPress={() => props.navigation.navigate('Inicio')}
-          >
-            Cancelar
-          </Button>
-        </View>
-      </View>
-
+      {isLoading
+        ? <ActivityIndicator animating={true} color={Colors.red800} size={"large"} />
+        : (<View style={styles.container}>
+          <View style={styles.buttonContainer}>
+            <Button
+              mode="contained"
+              color="green"
+              style={styles.buttons}
+              // onPress={() => console.log("Pressed")}
+              onPress={handleCrearReclamo}
+            >
+              Crear
+        </Button>
+          </View>
+          <View style={styles.buttonContainer}>
+            <Button
+              mode="contained"
+              color="red"
+              style={styles.buttons}
+              onPress={() => props.navigation.navigate('Inicio')}
+            >
+              Cancelar
+        </Button>
+          </View>
+        </View>)}
       <Portal>
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
-          <Dialog.Title>Reclamo registrado</Dialog.Title>
+          {isSuccess
+            ? (
+              <View>
+                <Dialog.Title>Reclamo registrado!</Dialog.Title>
+                <Dialog.Content>
+                  <Paragraph>Registramos el reclamo correctamente con el numero: {idReclamoCreado}</Paragraph>
+                </Dialog.Content>
+              </View>
+            )
+            : (
+              <View>
+                <Dialog.Title>Ups! Hubo un problema! </Dialog.Title>
+                <Dialog.Content>
+                  <Paragraph>Lamentablemente hubo un problema al intentar registrar el reclamo. </Paragraph>
+                  <Paragraph>Por favor, pasale el siguiente detalle al administrador: {errorDetail}</Paragraph>
+                </Dialog.Content>
+              </View>
+            )
+          }
           <Dialog.Actions>
-            <Button onPress={() => handleCrearReclamo()}>OK</Button>
+            <Button onPress={() => handleCerrarDialogSuccess()}>OK</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </View>
+    </ScrollView>
   );
 };
 
