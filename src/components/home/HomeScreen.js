@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation, userInfo }) => {
                 mode="contained"
                 onPress={() => navigation.navigate('Listado reclamos')}>
                 Ver todos
-                </Button>
+            </Button>
             <FAB
                 style={style.fab}
                 label="Crear nuevo reclamo"
