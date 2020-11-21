@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "752220286312",
+    "firebase_url": "https://admin-consorcios-app.firebaseio.com",
+    "project_id": "admin-consorcios-app",
+    "storage_bucket": "admin-consorcios-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752220286312:android:35ff7519d9313150da7add",
+        "android_client_info": {
+          "package_name": "com.frontendadminconsorcios"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752220286312-4mj8t87t39vhup4q40pps26femqoamic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhzVIfc8S9kW1COVszn36hp8NtQdCGu9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752220286312-4mj8t87t39vhup4q40pps26femqoamic.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
