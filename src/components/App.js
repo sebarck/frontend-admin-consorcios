@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
-import React from "react";
-import { StyleSheet, ScrollView, View } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, ScrollView, View, Alert } from "react-native";
 import HomeScreen from "./home/HomeScreen";
 import ReclamosScreen from "./reclamos/ReclamosScreen";
 import AprobarReclamoScreen from "./reclamos/AprobarReclamoScreen";
@@ -8,6 +8,7 @@ import CrearReclamoScreen from "./reclamos/CrearReclamoScreen";
 import InspeccionarReclamoScreen from "./reclamos/InspeccionarReclamoScreen";
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import messaging from '@react-native-firebase/messaging';
 import DetalleReclamoScreen from "./reclamos/detalle/DetalleReclamoScreen";
 
 const loggedUserInfo = {
@@ -53,6 +54,14 @@ const theme = {
 const Drawer = createDrawerNavigator();
 
 export default function App() {
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body);
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <PaperProvider theme={theme}>
       <View style={styles.container}>

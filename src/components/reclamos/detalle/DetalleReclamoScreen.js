@@ -18,7 +18,7 @@ const DetalleReclamoScreen = (props) => {
                     "content-type": "application/json"
                 }
             }).then((response) => {
-                console.log(response.data);
+                //console.log(response.data);
                 if (mounted) {
                     setDetalleReclamo(response.data);
                     setIsLoading(false);
