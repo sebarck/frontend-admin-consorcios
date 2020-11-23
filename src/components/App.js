@@ -16,27 +16,7 @@ const loggedUserInfo = {
   nombre: "Sebastian",
   apellido: "Monti",
   dni: 36826858,
-  tipo: "cliente",
-  reclamosEnCurso: [
-    {
-      id: 1,
-      titulo: "Boton ascensor roto 5to piso",
-      descripcion: "Se encontró que el boton del 5to piso no está funcionando, impidiendo solicitar el ascensor",
-      estado: "INSPECCIÓN"
-    },
-    {
-      id: 2,
-      titulo: "Rajadura de mamposteria",
-      descripcion: "Actualmente la unidad funcional se encuentra con una rajadura interna",
-      estado: "INSPECCIÓN"
-    },
-    {
-      id: 3,
-      titulo: "Rajadura de mamposteria",
-      descripcion: "Actualmente la unidad funcional se encuentra con una rajadura interna",
-      estado: "INSPECCIÓN"
-    }
-  ]
+  tipo: "USER",
 };
 
 const theme = {
