@@ -11,12 +11,9 @@ import {
 import ImagePicker from "react-native-image-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Paragraph } from "react-native-paper";
-import { SliderBox } from "react-native-image-slider-box";
 import base64 from "react-native-base64";
 
-export default function SimpleImagePicker() {
-  const [imageSource, setImageSource] = useState(null);
-
+export default function SimpleImagePicker(props) {
   function selectImage() {
     let options = {
       title: "Seleccione origen de la imagen",
@@ -40,27 +37,17 @@ export default function SimpleImagePicker() {
         console.log("User tapped custom button: ", response.customButton);
       } else {
         source = response.data;
+        props.addItemFunction(source);
+        props.setImagenesReclamoLenghtFunction(props.arrayImagenes.length);
       }
-      addItem(source);
-      setImagenesReclamoLenght(imagenesReclamo2.length);
     });
   }
-
-  const [imagenesReclamo2, setImagenesReclamo2] = useState([]);
-
-  const [imagenesReclamoLenght, setImagenesReclamoLenght] = useState(0);
-
-  function addItem(imageSource) {
-    setImagenesReclamo2((prevItems) => {
-      return [...prevItems, `data:image/png;base64,${imageSource}`];
-    });
-  }
-
+  
   return (
     <View>
       {/* falta agregar condicional de que si es usuario, puede agregar hasta 7.
-      Si es inspector, ilimitado! */}
-      {imagenesReclamoLenght < 6 && (
+      Si es inspector, ilimitado! No sé porque el lenght quedó con un valor menos pero anda bien */}
+      {props.imagenesLenght < 2 && (
         <TouchableOpacity onPress={selectImage}>
           <View style={styles.containerImagenes}>
             <View style={styles.iconImagen}>
@@ -77,12 +64,6 @@ export default function SimpleImagePicker() {
           </View>
         </TouchableOpacity>
       )}
-      <SliderBox
-        sliderBoxHeight={200}
-        images={imagenesReclamo2}
-        ImageComponentStyle={{ width: "60%" }}
-      />
-      <Paragraph></Paragraph>
     </View>
   );
 }

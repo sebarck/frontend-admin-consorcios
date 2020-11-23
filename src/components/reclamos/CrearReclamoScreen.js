@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Picker } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import {
@@ -10,21 +10,15 @@ import {
   Paragraph,
   ActivityIndicator,
 } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import backendAdminConsorcios from "../../apis/backendAdminConsorcios";
-
-//pruebo imagePicker
+import ImagesSlider from "../imagesSlider/ImagesSlider";
 import SimpleImagePicker from "../imagePicker/SimpleImagePicker";
 
 const CrearReclamoScreen = (props) => {
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
   const showDialogAprobar = () => setVisibleAprobar(true);
   const hideDialogAprobar = () => setVisibleAprobar(false);
-
-  const [visibleRechazar, setVisibleRechazar] = React.useState(false);
-  const showDialogRechazar = () => setVisibleRechazar(true);
-  const hideDialogRechazar = () => setVisibleRechazar(false);
 
   const [textDptoArea, setTextDptoArea] = React.useState("");
   const [textReclamo, setTextReclamo] = React.useState("");
@@ -40,6 +34,7 @@ const CrearReclamoScreen = (props) => {
     selectedValueTipoReclamo,
     setSelectedValueTipoReclamo,
   ] = React.useState("");
+
   const [selectedValueEdificio, setSelectedValueEdificio] = React.useState("");
 
   const params = JSON.stringify({
@@ -49,6 +44,7 @@ const CrearReclamoScreen = (props) => {
     edificio: { id: 1 },
     propiedad: { id: 1 },
     viviente: { id: 1 },
+    evidencia: imageSourcePrueba,
   });
 
   const handleCerrarDialogSuccess = () => {
@@ -59,6 +55,8 @@ const CrearReclamoScreen = (props) => {
   };
 
   const handleCrearReclamo = async () => {
+    console.log(params);
+    console.log(imagenesReclamo);
     mostrarSpinner();
     response = await backendAdminConsorcios
       .post("/reclamos", params, {
@@ -81,10 +79,43 @@ const CrearReclamoScreen = (props) => {
       });
   };
 
+  const [flagCancelarReclamo, setFlagCancelarReclamo] = React.useState(false);
+
+  function handleCancelar() {
+    setFlagCancelarReclamo(!flagCancelarReclamo);
+    props.navigation.navigate("Inicio");
+  }
+
+  //images picker y slider
+
+  const [imagenesReclamo, setImagenesReclamo] = React.useState([]);
+
+  const [imagenesReclamoLenght, setImagenesReclamoLenght] = React.useState(0);
+
+  const [imageSourcePrueba, setImageSourcePrueba] = React.useState("");
+
+  function addItem(imageSource) {
+    setImagenesReclamo([
+      ...imagenesReclamo,
+      `data:image/png;base64,${imageSource}`,
+    ]);
+    setImageSourcePrueba(`data:image/png;base64,${imageSource}`);
+  }
+
+  useEffect(() => {
+    {
+      deleteAllItem();
+    }
+  }, [flagCancelarReclamo]);
+
+  function deleteAllItem() {
+    imagenesReclamo.length = 0;
+    setImagenesReclamoLenght(imagenesReclamo.length);
+  }
+
   return (
     <ScrollView>
       <Title style={{ marginTop: 30, marginLeft: 20 }}>Tipo de reclamo</Title>
-
       <Picker
         selectedValue={selectedValueTipoReclamo}
         style={{ marginLeft: 20, height: 50, width: 360, marginRight: 20 }}
@@ -103,7 +134,7 @@ const CrearReclamoScreen = (props) => {
       <Picker
         selectedValue={selectedValueEdificio}
         style={{ marginLeft: 20, height: 50, width: 360, marginRight: 20 }}
-        onValueChange={(itemValueEdificio, itemIndexEdficio) =>
+        onValueChange={(itemValueEdificio, itemIndexEdificio) =>
           setSelectedValueEdificio(itemValueEdificio)
         }
       >
@@ -118,10 +149,10 @@ const CrearReclamoScreen = (props) => {
       </Title>
 
       <Picker
-        selectedValue={selectedValueEdificio}
+        selectedValue={textDptoArea}
         style={{ marginLeft: 20, height: 50, width: 360, marginRight: 20 }}
-        onValueChange={(itemValueEdificio, itemIndexEdficio) =>
-          setSelectedValueEdificio(itemValueEdificio)
+        onValueChange={(itemValueDptoArea, itemIndexEdificio) =>
+          setTextDptoArea(itemValueDptoArea)
         }
       >
         <Picker.Item label="Seleccione una opción..." value="0" color="grey" />
@@ -138,24 +169,14 @@ const CrearReclamoScreen = (props) => {
         multiline={true}
       />
 
-      {/* Pendientes
-      2) Falta agregar el componente para adjuntar imágenes (https://github.com/react-native-image-picker/react-native-image-picker)
-      
-      Empiezo a probar importación imagePicker      
-      */}
+      <SimpleImagePicker
+        arrayImagenes={imagenesReclamo}
+        imagenesLenght={imagenesReclamoLenght}
+        addItemFunction={addItem}
+        setImagenesReclamoLenghtFunction={setImagenesReclamoLenght}
+      />
 
-      <SimpleImagePicker />
-      {/* <View style={styles.iconImagen}>
-          <Icon
-            name="camera"
-            size={30}
-            color="blue"
-            style={{ marginLeft: 20, marginBottom: 20 }}
-          />
-        </View>
-        <View style={styles.textImagen}>
-          <Paragraph>Adjuntar imágenes</Paragraph>
-        </View> */}
+      <ImagesSlider imagenes={imagenesReclamo} />
 
       {isLoading ? (
         <ActivityIndicator
@@ -181,7 +202,7 @@ const CrearReclamoScreen = (props) => {
               mode="contained"
               color="red"
               style={styles.buttons}
-              onPress={() => props.navigation.navigate("Inicio")}
+              onPress={handleCancelar}
             >
               Cancelar
             </Button>
