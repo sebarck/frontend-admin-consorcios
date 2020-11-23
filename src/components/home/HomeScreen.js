@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { Button, Card, FAB, Title } from 'react-native-paper';
+import { Button, Card, FAB, Paragraph, Title } from 'react-native-paper';
 import UltReclamosScreen from '../reclamos/UltReclamosScreen';
-import ReclamosEnCursoText from './utils/ReclamosEnCursoText';
 
 const HomeScreen = ({ navigation, userInfo }) => {
     return (
@@ -11,7 +10,7 @@ const HomeScreen = ({ navigation, userInfo }) => {
                 <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
                 <Card.Content>
                     <Title>Bienvenido, {userInfo.nombre}!</Title>
-                    <ReclamosEnCursoText reclamosEnCurso={userInfo.reclamosEnCurso.length} />
+                    <Paragraph>Tu perfil es {userInfo.tipo}! :)</Paragraph>
                 </Card.Content>
             </Card>
             <UltReclamosScreen userInfo={userInfo} cantVisible={3} navigation={navigation} />

@@ -56,10 +56,12 @@ const DetalleReclamoScreen = (props) => {
                                         title={detalleReclamo.categoria}
                                         left={props => <List.Icon {...props} icon="hammer" />}
                                     />
-                                    <List.Item
-                                        title={detalleReclamo.edificio.calle + ' ' + detalleReclamo.edificio.altura + ', ' + detalleReclamo.edificio.barrio}
-                                        left={props => <List.Icon {...props} icon="home-city-outline" />}
-                                    />
+                                    {typeof (detalleReclamo.edificio) !== 'undefined' &&
+                                        <List.Item
+                                            title={`${detalleReclamo.edificio.calle}, ${detalleReclamo.edificio.altura}, ${detalleReclamo.edificio.barrio}`}
+                                            left={props => <List.Icon {...props} icon="home-city-outline" />}
+                                        />
+                                    }
                                     <List.Item
                                         title={detalleReclamo.descripcion}
                                         titleNumberOfLines={4}

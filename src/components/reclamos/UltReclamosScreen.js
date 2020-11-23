@@ -10,13 +10,23 @@ const UltReclamosScreen = (props) => {
 
     // console.log(props);
     // console.log(props.userInfo.reclamosEnCurso);
+    const urlReclamos = (props) => {
+        if (props.userInfo.tipo === "USER") {
+            return '/reclamos/viviente/';
+        } else if (props.userInfo.tipo === "ADMIN"){
+            return '/reclamos/administrador/';
+        } else {
+            return '/reclamos/inspector/';
+        }
+    }
 
     useEffect(() => {
         let mounted = true;
 
         async function ObtenerReclamosViviente(props) {
             setIsLoading(true);
-            backendAdminConsorcios.get('/reclamos/viviente/' + props.userInfo.idViviente, {
+            var url = urlReclamos(props);
+            backendAdminConsorcios.get(url + props.userInfo.idViviente, {
                 "headers": {
                     "content-type": "application/json"
                 }
