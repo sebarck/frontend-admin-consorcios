@@ -63,7 +63,7 @@ export default function App() {
           </Drawer.Navigator>
         </NavigationContainer>
       </View>
-    </PaperProvider >
+    </PaperProvider>
   );
 };
 
