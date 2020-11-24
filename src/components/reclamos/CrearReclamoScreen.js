@@ -54,22 +54,19 @@ const CrearReclamoScreen = (props) => {
 
   const handleCrearReclamo = async () => {
     mostrarSpinner();
-    response = await backendAdminConsorcios.post('/reclamos', params, {
-      "headers": {
-        "content-type": "application/json"
-      }
-    }).then((response) => {
-      //console.log(response);
-      setIsSuccess(true);
-      setIdReclamoCreado(response.data.id);
-      ocultarSpinner();
-      showDialogAprobar();
-    }).catch((error) => {
-      setErrorDetail(error.response.data.error);
-      setIsSuccess(false);
-      ocultarSpinner();
-      showDialogAprobar();
-    });
+    response = await backendAdminConsorcios.post('/reclamos', params)
+      .then((response) => {
+        //console.log(response);
+        setIsSuccess(true);
+        setIdReclamoCreado(response.data.id);
+        ocultarSpinner();
+        showDialogAprobar();
+      }).catch((error) => {
+        setErrorDetail(error.response.data.error);
+        setIsSuccess(false);
+        ocultarSpinner();
+        showDialogAprobar();
+      });
   };
 
   return (
