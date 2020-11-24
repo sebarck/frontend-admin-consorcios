@@ -37,16 +37,6 @@ const CrearReclamoScreen = (props) => {
 
   const [selectedValueEdificio, setSelectedValueEdificio] = React.useState("");
 
-  const params = JSON.stringify({
-    categoria: selectedValueTipoReclamo,
-    titulo: "Arreglos generales",
-    descripcion: textReclamo,
-    edificio: { id: 1 },
-    propiedad: { id: 1 },
-    viviente: { id: 1 },
-    evidencia: imageSourcePrueba,
-  });
-
   const handleCerrarDialogSuccess = () => {
     hideDialogAprobar();
     setErrorDetail("");
@@ -56,7 +46,6 @@ const CrearReclamoScreen = (props) => {
 
   const handleCrearReclamo = async () => {
     console.log(params);
-    console.log(imagenesReclamo);
     mostrarSpinner();
     response = await backendAdminConsorcios
       .post("/reclamos", params, {
@@ -92,15 +81,22 @@ const CrearReclamoScreen = (props) => {
 
   const [imagenesReclamoLenght, setImagenesReclamoLenght] = React.useState(0);
 
-  const [imageSourcePrueba, setImageSourcePrueba] = React.useState("");
-
   function addItem(imageSource) {
     setImagenesReclamo([
       ...imagenesReclamo,
       `data:image/png;base64,${imageSource}`,
     ]);
-    setImageSourcePrueba(`data:image/png;base64,${imageSource}`);
   }
+
+  const params = JSON.stringify({
+    categoria: selectedValueTipoReclamo,
+    titulo: "Arreglos generales",
+    descripcion: textReclamo,
+    edificio: { id: 1 },
+    propiedad: { id: 1 },
+    viviente: { id: 1 },
+    evidencia: imagenesReclamo,
+  });
 
   useEffect(() => {
     {
