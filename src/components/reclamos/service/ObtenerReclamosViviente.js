@@ -1,7 +1,7 @@
 import React from 'react';
 import backendAdminConsorcios from '../../../apis/backendAdminConsorcios';
 
-export function ObtenerReclamosViviente(props) {
+export async function ObtenerReclamosViviente(props) {
     return backendAdminConsorcios.get('/reclamos/viviente/' + props.userInfo.idViviente, {
         "headers": {
             "content-type": "application/json"
