@@ -5,36 +5,28 @@ import { ActivityIndicator, Button, Card, List, Subheading, Surface } from 'reac
 import backendAdminConsorcios from '../../../apis/backendAdminConsorcios';
 
 const DetalleReclamoScreen = (props) => {
-    const [isLoading, setIsLoading] = React.useState(false);
+    const { params } = props.route;
+    const [isLoading, setIsLoading] = React.useState(true);
     const [detalleReclamo, setDetalleReclamo] = React.useState("");
 
     useEffect(() => {
-        let mounted = true;
-
-        async function ObtenerReclamoPorId(props) {
-            setIsLoading(true);
-            backendAdminConsorcios.get('/reclamos/' + props.route.params.reclamo.id, {
-                "headers": {
-                    "content-type": "application/json"
-                }
-            }).then((response) => {
-                //console.log(response.data);
-                if (mounted) {
+        const obtenerReclamos = async ({ reclamo }) => {
+            backendAdminConsorcios.get('/reclamos/' + reclamo.id)
+                .then((response) => {
                     setDetalleReclamo(response.data);
-                    setIsLoading(false);
-                }
-            }).catch((error) => {
-                setIsLoading(false);
-                console.log(error.response.data.error)
-            }
-            )
-        };
+                }).catch((error) => {
+                    console.log(error.response.data.error)
+                }).finally(() => setIsLoading(false))
+        }
+        obtenerReclamos(params);
 
-        ObtenerReclamoPorId(props);
-
-        return () => mounted = false;
+        return () => setIsLoading(true);
 
     }, [props]);
+
+    if (isLoading) {
+
+    }
 
     return (
         <View style={{ flex: 1 }}>
@@ -56,12 +48,10 @@ const DetalleReclamoScreen = (props) => {
                                         title={detalleReclamo.categoria}
                                         left={props => <List.Icon {...props} icon="hammer" />}
                                     />
-                                    {typeof (detalleReclamo.edificio) !== 'undefined' &&
-                                        <List.Item
-                                            title={`${detalleReclamo.edificio.calle}, ${detalleReclamo.edificio.altura}, ${detalleReclamo.edificio.barrio}`}
-                                            left={props => <List.Icon {...props} icon="home-city-outline" />}
-                                        />
-                                    }
+                                    <List.Item
+                                        title={`${detalleReclamo.edificio.calle}, ${detalleReclamo.edificio.altura}, ${detalleReclamo.edificio.barrio}`}
+                                        left={props => <List.Icon {...props} icon="home-city-outline" />}
+                                    />
                                     <List.Item
                                         title={detalleReclamo.descripcion}
                                         titleNumberOfLines={4}
