@@ -46,22 +46,16 @@ const CrearReclamoScreen = (props) => {
   };
 
   const handleCrearReclamo = async () => {
-    console.log(params);
+    // console.log(params);
     mostrarSpinner();
-    response = await backendAdminConsorcios
-      .post("/reclamos", params, {
-        headers: {
-          "content-type": "application/json",
-        },
-      })
+    response = await backendAdminConsorcios.post('/reclamos', params)
       .then((response) => {
         //console.log(response);
         setIsSuccess(true);
         setIdReclamoCreado(response.data.id);
         ocultarSpinner();
         showDialogAprobar();
-      })
-      .catch((error) => {
+      }).catch((error) => {
         setErrorDetail(error.response.data.error);
         setIsSuccess(false);
         ocultarSpinner();
@@ -86,7 +80,7 @@ const CrearReclamoScreen = (props) => {
   function addItem(imageSource) {
     setImagenesReclamo([
       ...imagenesReclamo,
-      `data:image/png;base64,${imageSource}`,
+      `data:image/png;base64,${imageSource}`
     ]);
   }
 
@@ -97,13 +91,11 @@ const CrearReclamoScreen = (props) => {
     edificio: { id: 1 },
     propiedad: { id: 1 },
     viviente: { id: 1 },
-    evidencia: imagenesReclamo,
+    evidencias: imagenesReclamo.reduce((evidencias, evidencia) => [...evidencias, {imagen: evidencia}], []),
   });
 
   useEffect(() => {
-    {
       deleteAllItem();
-    }
   }, [flagCancelarReclamo]);
 
   function deleteAllItem() {
@@ -183,30 +175,30 @@ const CrearReclamoScreen = (props) => {
           size={"large"}
         />
       ) : (
-        <View style={styles.container}>
-          <View style={styles.buttonContainer}>
-            <Button
-              mode="contained"
-              color="green"
-              style={styles.buttons}
-              // onPress={() => console.log("Pressed")}
-              onPress={handleCrearReclamo}
-            >
-              Crear
+          <View style={styles.container}>
+            <View style={styles.buttonContainer}>
+              <Button
+                mode="contained"
+                color="green"
+                style={styles.buttons}
+                // onPress={() => console.log("Pressed")}
+                onPress={handleCrearReclamo}
+              >
+                Crear
             </Button>
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button
-              mode="contained"
-              color="red"
-              style={styles.buttons}
-              onPress={handleCancelar}
-            >
-              Cancelar
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                mode="contained"
+                color="red"
+                style={styles.buttons}
+                onPress={handleCancelar}
+              >
+                Cancelar
             </Button>
+            </View>
           </View>
-        </View>
-      )}
+        )}
       <Portal>
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
           {isSuccess ? (
@@ -220,20 +212,20 @@ const CrearReclamoScreen = (props) => {
               </Dialog.Content>
             </View>
           ) : (
-            <View>
-              <Dialog.Title>Ups! Hubo un problema! </Dialog.Title>
-              <Dialog.Content>
-                <Paragraph>
-                  Lamentablemente hubo un problema al intentar registrar el
+              <View>
+                <Dialog.Title>Ups! Hubo un problema! </Dialog.Title>
+                <Dialog.Content>
+                  <Paragraph>
+                    Lamentablemente hubo un problema al intentar registrar el
                   reclamo.{" "}
-                </Paragraph>
-                <Paragraph>
-                  Por favor, pasale el siguiente detalle al administrador:{" "}
-                  {errorDetail}
-                </Paragraph>
-              </Dialog.Content>
-            </View>
-          )}
+                  </Paragraph>
+                  <Paragraph>
+                    Por favor, pasale el siguiente detalle al administrador:{" "}
+                    {errorDetail}
+                  </Paragraph>
+                </Dialog.Content>
+              </View>
+            )}
           <Dialog.Actions>
             <Button onPress={() => handleCerrarDialogSuccess()}>OK</Button>
           </Dialog.Actions>

@@ -10,7 +10,7 @@ const UltReclamosScreen = (props) => {
 
     // console.log(props);
     // console.log(props.userInfo.reclamosEnCurso);
-    const urlReclamos = (props) => {
+    const buildUrlReclamos = (props) => {
         if (props.userInfo.tipo === "USER") {
             return '/reclamos/viviente/';
         } else if (props.userInfo.tipo === "ADMIN"){
@@ -25,7 +25,7 @@ const UltReclamosScreen = (props) => {
 
         async function ObtenerReclamosViviente(props) {
             setIsLoading(true);
-            var url = urlReclamos(props);
+            var url = buildUrlReclamos(props);
             backendAdminConsorcios.get(url + props.userInfo.idViviente, {
                 "headers": {
                     "content-type": "application/json"

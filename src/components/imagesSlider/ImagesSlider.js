@@ -4,7 +4,7 @@ import { Paragraph } from "react-native-paper";
 import { SliderBox } from "react-native-image-slider-box";
 import base64 from "react-native-base64";
 
-export default function ImagesSlider(props) {
+export default function ImagesSlider(props) {  
   return (
     <View>
     {/* {console.log("ImagesSlider.js")}
