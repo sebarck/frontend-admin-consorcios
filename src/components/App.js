@@ -6,9 +6,12 @@ import ReclamosScreen from "./reclamos/ReclamosScreen";
 import AprobarReclamoScreen from "./reclamos/AprobarReclamoScreen";
 import CrearReclamoScreen from "./reclamos/CrearReclamoScreen";
 import InspeccionarReclamoScreen from "./reclamos/InspeccionarReclamoScreen";
-import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import messaging from '@react-native-firebase/messaging';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+} from "@react-navigation/drawer";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import messaging from "@react-native-firebase/messaging";
 import DetalleReclamoScreen from "./reclamos/detalle/DetalleReclamoScreen";
 
 const loggedUserInfo = {
@@ -24,19 +27,22 @@ const theme = {
   roundness: 4,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#c6b497',
-    background: '#e8ded2',
-    accent: '#34626c',
-    surface: '#839b97',
-  }
+    primary: "#c6b497",
+    background: "#e8ded2",
+    accent: "#34626c",
+    surface: "#839b97",
+  },
 };
 
 const Drawer = createDrawerNavigator();
 
 export default function App() {
   useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert(remoteMessage.notification.title, remoteMessage.notification.body);
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert(
+        remoteMessage.notification.title,
+        remoteMessage.notification.body
+      );
     });
 
     return unsubscribe;
@@ -46,33 +52,57 @@ export default function App() {
     <PaperProvider theme={theme}>
       <View style={styles.container}>
         <NavigationContainer>
-          <Drawer.Navigator initialRouteName="Inicio" >
+          <Drawer.Navigator initialRouteName="Inicio">
             <Drawer.Screen name="Inicio">
-              {props => <HomeScreen {...props} userInfo={loggedUserInfo} />}
+              {(props) => <HomeScreen {...props} userInfo={loggedUserInfo} />}
             </Drawer.Screen>
-            <Drawer.Screen name="Crear reclamo" component={CrearReclamoScreen} />
+            {loggedUserInfo.tipo == "USER" && (
+              <Drawer.Screen
+                name="Crear reclamo"
+                component={CrearReclamoScreen}
+              />
+            )}
             <Drawer.Screen name="Listado reclamos">
-              {props => <ReclamosScreen {...props} userInfo={loggedUserInfo} />}
-            </Drawer.Screen>
-            <Drawer.Screen name="Aprobacion reclamos" component={AprobarReclamoScreen} />
-            <Drawer.Screen name="Reclamos a validar" component={InspeccionarReclamoScreen} />
-            <Drawer.Screen name="Detalle" options={{ drawerLabel: "Detalle Reclamos" }}>
-              {props => <DetalleReclamoScreen {...props} />}
+              {(props) => (
+                <ReclamosScreen {...props} userInfo={loggedUserInfo} />
+              )}
             </Drawer.Screen>
 
+            {/* Si es usuario, no puede aprobar reclamos */}
+            {!(loggedUserInfo.tipo == "USER") && (
+              <Drawer.Screen
+                name="Aprobacion reclamos"
+                component={AprobarReclamoScreen}
+              />
+            )}
+
+            {/* Si es usuario, no puede inspeccionar reclamos */}
+            {!(loggedUserInfo.tipo == "USER") && (
+              <Drawer.Screen
+                name="Reclamos a validar"
+                component={InspeccionarReclamoScreen}
+              />
+            )}
+
+            <Drawer.Screen
+              name="Detalle"
+              options={{ drawerLabel: "Detalle Reclamos" }}
+            >
+              {(props) => <DetalleReclamoScreen {...props} />}
+            </Drawer.Screen>
           </Drawer.Navigator>
         </NavigationContainer>
       </View>
     </PaperProvider>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: '#e8ded2'
-  }
+    backgroundColor: "#e8ded2",
+  },
 });
 
 /*           <Drawer.Section title="Admin Consorcios">
@@ -93,7 +123,6 @@ const styles = StyleSheet.create({
           label="Cerrar sesión"
         />
       </Drawer.Section> */
-
 
 /*       <Stack.Navigator initialRouteName="Home">
       <Stack.Screen name="Home" options={{ title: "Administrador de consorcios" }}>
