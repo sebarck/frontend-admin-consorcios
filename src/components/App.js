@@ -19,7 +19,7 @@ const loggedUserInfo = {
   nombre: "Sebastian",
   apellido: "Monti",
   dni: 36826858,
-  tipo: "ADMIN",
+  tipo: "USER",
 };
 
 const theme = {
