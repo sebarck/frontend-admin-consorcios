@@ -42,6 +42,7 @@ const CrearReclamoScreen = (props) => {
     setErrorDetail("");
     setIdReclamoCreado("");
     props.navigation.navigate("Inicio");
+    setFlagCancelarReclamo(!flagCancelarReclamo);
   };
 
   const handleCrearReclamo = async () => {
@@ -60,6 +61,7 @@ const CrearReclamoScreen = (props) => {
         ocultarSpinner();
         showDialogAprobar();
       });
+    setFlagCancelarReclamo(!flagCancelarReclamo);
   };
 
   const [flagCancelarReclamo, setFlagCancelarReclamo] = React.useState(false);
