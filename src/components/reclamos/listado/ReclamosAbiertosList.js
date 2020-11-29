@@ -8,9 +8,9 @@ const ReclamosAbiertosList = (props) => {
         props.navigation.navigate("Detalle", { reclamo: reclamo })
     }
 
-    return props.reclamos.slice(0, props.cantVisible).map((reclamo) => {
+    return props.reclamos.slice(0, props.cantVisible).map((reclamo, index) => {
         return (
-            <ScrollView>
+            <ScrollView key={reclamo.id}>
                 <List.Item
                     title={reclamo.titulo}
                     description={reclamo.descripcion}
