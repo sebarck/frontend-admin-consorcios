@@ -2,42 +2,55 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Chip } from 'react-native-paper';
 
-const ChipsFiltrosEstado = () => {
+const ChipsFiltrosEstado = ({ onPressFun }) => {
     return (
         <View style={styles.chipsContainer}>
             <Chip
                 style={styles.chip}
                 mode="outlined"
+                icon="expand-all"
+                onPress={() => onPressFun("")}
+            >
+                Todos
+            </Chip>
+            <Chip
+                style={styles.chip}
+                mode="outlined"
                 icon="check-circle-outline"
-                onPress={() => console.log('Filtro por aprobado')}>
+                onPress={() => onPressFun("APROBADO")}
+            >
                 Aprobados
             </Chip>
             <Chip
                 style={styles.chip}
                 mode="outlined"
                 icon="new-box"
-                onPress={() => console.log('Filtro por aprobado')}>
+                onPress={() => onPressFun("NUEVO")}
+            >
                 Nuevos
             </Chip>
             <Chip
                 style={styles.chip}
                 mode="outlined"
                 icon="eye-check-outline"
-                onPress={() => console.log('Filtro por aprobado')}>
+                onPress={() => onPressFun("VALIDADO")}
+            >
                 Validados
             </Chip>
             <Chip
                 style={styles.chip}
                 mode="outlined"
                 icon="close-circle-outline"
-                onPress={() => console.log('Filtro por aprobado')}>
+                onPress={() => onPressFun("RECHAZADO")}
+            >
                 Rechazados
             </Chip>
             <Chip
                 style={styles.chip}
                 mode="outlined"
                 icon="progress-check"
-                onPress={() => console.log('Filtro por aprobado')}>
+                onPress={() => onPressFun("CERRADO")}
+            >
                 Cerrados
         </Chip>
         </View>
