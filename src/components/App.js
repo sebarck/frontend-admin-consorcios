@@ -13,6 +13,7 @@ import {
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import messaging from "@react-native-firebase/messaging";
 import DetalleReclamoScreen from "./reclamos/detalle/DetalleReclamoScreen";
+import LoginScreen from "./login/LoginScreen";
 
 const loggedUserInfo = {
   idViviente: 1,
@@ -56,6 +57,9 @@ export default function App() {
             <Drawer.Screen name="Inicio">
               {(props) => <HomeScreen {...props} userInfo={loggedUserInfo} />}
             </Drawer.Screen>
+              <Drawer.Screen name="Login">
+              {props => <LoginScreen {...props} userInfo={loggedUserInfo} />}
+                          </Drawer.Screen>
             {loggedUserInfo.tipo == "USER" && (
               <Drawer.Screen
                 name="Crear reclamo"
