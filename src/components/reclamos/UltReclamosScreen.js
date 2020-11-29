@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Chip, Colors, List, Subheading, Text } from 'react-native-paper';
+import { ActivityIndicator, Colors, List, Subheading } from 'react-native-paper';
 import backendAdminConsorcios from '../../apis/backendAdminConsorcios';
 import ReclamosAbiertosList from './listado/ReclamosAbiertosList';
 
@@ -18,11 +18,20 @@ const UltReclamosScreen = (props) => {
         }
     }
 
+    const optionsBuilder = (props) => {
+        if (typeof (props.filter) === "undefined") {
+            return "";
+        } else {
+            return props.filter;
+        }
+    }
+
     useEffect(() => {
         var url = buildUrlReclamos(props);
+        var options = optionsBuilder(props);
         const obtenerReclamos = async ({ userInfo }) => {
             backendAdminConsorcios
-                .get(url + userInfo.idViviente)
+                .get(url + userInfo.idViviente + options)
                 .then((response) => {
                     setReclamosEnCurso(response.data);
                 })
