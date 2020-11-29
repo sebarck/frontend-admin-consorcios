@@ -9,6 +9,7 @@ import InspeccionarReclamoScreen from "./reclamos/InspeccionarReclamoScreen";
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import DetalleReclamoScreen from "./reclamos/detalle/DetalleReclamoScreen";
+import LoginScreen from "./login/LoginScreen";
 
 const loggedUserInfo = {
   idViviente: 1,
@@ -57,9 +58,9 @@ export default function App() {
     <PaperProvider theme={theme}>
       <View style={styles.container}>
         <NavigationContainer>
-          <Drawer.Navigator initialRouteName="Inicio" >
-            <Drawer.Screen name="Inicio">
-              {props => <HomeScreen {...props} userInfo={loggedUserInfo} />}
+          <Drawer.Navigator initialRouteName="Login" >
+            <Drawer.Screen name="Login">
+              {props => <LoginScreen {...props} userInfo={loggedUserInfo} />}
             </Drawer.Screen>
             <Drawer.Screen name="Crear reclamo" component={CrearReclamoScreen} />
             <Drawer.Screen name="Listado reclamos">
