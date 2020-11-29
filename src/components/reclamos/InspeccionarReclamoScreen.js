@@ -1,14 +1,17 @@
 import React from "react";
 import { View, StyleSheet, Picker } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import {
   TextInput,
   Button,
   Dialog,
   Portal,
-  Title,
   Paragraph,
 } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
+import SimpleImagePicker from "../imagePicker/SimpleImagePicker";
+import ImagesSlider from "../imagesSlider/ImagesSlider";
+
+// a este componente habría que cambiarle el nombre a "validar reclamos"
 
 const InspeccionarReclamoScreen = () => {
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
@@ -29,8 +32,26 @@ const InspeccionarReclamoScreen = () => {
   const [textDptoArea, setTextDptoArea] = React.useState("");
   const [textReclamo, setTextReclamo] = React.useState("");
 
+  const [imagenesReclamo, setImagenesReclamo] = React.useState([]);
+
+  function addItem(imageSource) {
+    setImagenesReclamo([
+      ...imagenesReclamo,
+      `data:image/png;base64,${imageSource}`,
+    ]);
+  }
+
+  function setImagenesReclamoLenght() {}
+
+  const imagenesReclamoHard = [
+    "https://source.unsplash.com/1024x768/?nature",
+    "https://source.unsplash.com/1024x768/?water",
+    "https://source.unsplash.com/1024x768/?girl",
+    "https://source.unsplash.com/1024x768/?tree",
+  ];
+
   return (
-    <View>
+    <ScrollView>
       <TextInput
         label="Tipo de reclamo"
         value={textTipoReclamo}
@@ -64,23 +85,14 @@ const InspeccionarReclamoScreen = () => {
         multiline={true}
       />
 
-      {/* Pendientes
-      2) Falta agregar el componente para adjuntar imágenes (https://github.com/react-native-image-picker/react-native-image-picker)
-      */}
-
-      <View style={styles.containerImagenes}>
-        <View style={styles.iconImagen}>
-          <Icon
-            name="camera"
-            size={30}
-            color="blue"
-            style={{ marginLeft: 20, marginBottom: 20 }}
-          />
-        </View>
-        <View style={styles.textImagen}>
-          <Paragraph>Adjuntar imágenes</Paragraph>
-          </View>
-      </View>
+      <SimpleImagePicker
+        arrayImagenes={imagenesReclamo}
+        imagenesLenght={0}
+        addItemFunction={addItem}
+        setImagenesReclamoLenghtFunction={setImagenesReclamoLenght}
+      />
+      
+      <ImagesSlider imagenes={imagenesReclamoHard} />
 
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
@@ -119,8 +131,7 @@ const InspeccionarReclamoScreen = () => {
           </Button>
         </View>
       </View>
-      
-      
+
       <Portal>
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
           <Dialog.Title>Reclamo procesado</Dialog.Title>
@@ -140,11 +151,11 @@ const InspeccionarReclamoScreen = () => {
           <Dialog.Title>Motivo de rechazo</Dialog.Title>
           <Dialog.Content>
             <TextInput
-            // label="Email"
-            // value={text}
-            // onChangeText={(text) => setText(text)}
-            style={styles.comentarioResolucionReclamo}
-            multiline={true}
+              // label="Email"
+              // value={text}
+              // onChangeText={(text) => setText(text)}
+              style={styles.comentarioResolucionReclamo}
+              multiline={true}
             />
           </Dialog.Content>
           <Dialog.Actions>
@@ -153,7 +164,7 @@ const InspeccionarReclamoScreen = () => {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -197,8 +208,8 @@ const styles = StyleSheet.create({
     margin: 5,
   },
 
-  buttonsLabel:{
-    fontSize:14,
+  buttonsLabel: {
+    fontSize: 14,
   },
 
   container: {
@@ -213,8 +224,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom:20,
-    marginTop:20,
+    marginBottom: 20,
+    marginTop: 20,
   },
   iconImagen: {
     flex: 1,
@@ -222,8 +233,8 @@ const styles = StyleSheet.create({
 
   textImagen: {
     flex: 5,
-    marginBottom:25
-  }, 
+    marginBottom: 25,
+  },
 });
 
 export default InspeccionarReclamoScreen;
