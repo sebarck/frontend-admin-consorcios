@@ -1,62 +1,62 @@
 import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Colors, List, Subheading, Text } from 'react-native-paper';
+import { ActivityIndicator, Colors, List, Subheading } from 'react-native-paper';
 import backendAdminConsorcios from '../../apis/backendAdminConsorcios';
-import ReclamosAbiertosList from './abiertos/ReclamosAbiertosList';
+import ReclamosAbiertosList from './listado/ReclamosAbiertosList';
 
 const UltReclamosScreen = (props) => {
     const [reclamosEnCurso, setReclamosEnCurso] = React.useState([]);
-    const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(true);
 
-    // console.log(props);
-    // console.log(props.userInfo.reclamosEnCurso);
     const buildUrlReclamos = (props) => {
         if (props.userInfo.tipo === "USER") {
             return '/reclamos/viviente/';
-        } else if (props.userInfo.tipo === "ADMIN"){
+        } else if (props.userInfo.tipo === "ADMIN") {
             return '/reclamos/administrador/';
         } else {
             return '/reclamos/inspector/';
         }
     }
 
-    useEffect(() => {
-        let mounted = true;
+    const optionsBuilder = (props) => {
+        if (typeof (props.filter) === "undefined") {
+            return "";
+        } else {
+            return props.filter;
+        }
+    }
 
-        async function ObtenerReclamosViviente(props) {
-            setIsLoading(true);
-            var url = buildUrlReclamos(props);
-            backendAdminConsorcios.get(url + props.userInfo.idViviente, {
-                "headers": {
-                    "content-type": "application/json"
-                }
-            }).then((response) => {
-                //console.log(response.data);
-                if (mounted) {
+    useEffect(() => {
+        var url = buildUrlReclamos(props);
+        var options = optionsBuilder(props);
+        const obtenerReclamos = async ({ userInfo }) => {
+            backendAdminConsorcios
+                .get(url + userInfo.idViviente + options)
+                .then((response) => {
                     setReclamosEnCurso(response.data);
-                    setIsLoading(false);
-                }
-            }).catch((error) => {
-                setIsLoading(false);
-                console.log(error.response.data.error)
-            }
-            )
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+                .finally(() => setIsLoading(false));
+        };
+        obtenerReclamos(props);
+
+        return () => {
+            setReclamosEnCurso([]);
+            setIsLoading(true);
         };
 
-        ObtenerReclamosViviente(props);
-
-        return () => mounted = false;
-
-    }, [props]);
+    }, [props])
 
     return (
         <ScrollView style={styles.list}>
             <List.Section>
-                <List.Subheader>Reclamos en curso</List.Subheader>
+                <List.Subheader>Reclamos</List.Subheader>
                 {isLoading
                     ? (
-                        <View style={{alignItems: 'center'}}>
-                            <Subheading style={{fontWeight: 'bold'}}>Estamos recuperando tus reclamos</Subheading>
+                        <View style={{ alignItems: 'center' }}>
+                            <Subheading style={{ fontWeight: 'bold' }}>Estamos recuperando tus reclamos</Subheading>
                             <ActivityIndicator animating={true} color={Colors.red800} size={"small"} />
                         </View>
                     )
