@@ -57,9 +57,9 @@ export default function App() {
             <Drawer.Screen name="Inicio">
               {(props) => <HomeScreen {...props} userInfo={loggedUserInfo} />}
             </Drawer.Screen>
-              <Drawer.Screen name="Login">
+            <Drawer.Screen name="Login">
               {props => <LoginScreen {...props} userInfo={loggedUserInfo} />}
-                          </Drawer.Screen>
+            </Drawer.Screen>
             {loggedUserInfo.tipo == "USER" && (
               <Drawer.Screen
                 name="Crear reclamo"
