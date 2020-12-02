@@ -53,7 +53,7 @@ export default function App() {
     <PaperProvider theme={theme}>
       <View style={styles.container}>
         <NavigationContainer>
-          <Drawer.Navigator initialRouteName="Inicio">
+          <Drawer.Navigator initialRouteName="Login">
             <Drawer.Screen name="Inicio">
               {(props) => <HomeScreen {...props} userInfo={loggedUserInfo} />}
             </Drawer.Screen>
