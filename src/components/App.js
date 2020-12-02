@@ -20,7 +20,7 @@ const loggedUserInfo = {
   nombre: "Sebastian",
   apellido: "Monti",
   dni: 36826858,
-  tipo: "USER",
+  tipo: "INSPECTOR",
 };
 
 const theme = {
@@ -92,7 +92,7 @@ export default function App() {
               name="Detalle"
               options={{ drawerLabel: "Detalle Reclamos" }}
             >
-              {(props) => <DetalleReclamoScreen {...props} />}
+              {(props) => <DetalleReclamoScreen {...props} userInfo={loggedUserInfo}/>}
             </Drawer.Screen>
           </Drawer.Navigator>
         </NavigationContainer>
