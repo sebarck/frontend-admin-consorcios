@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Image, ImageBackground } from 'react-native';
+import { View, StyleSheet, Text, Image, ImageBackground, Alert } from 'react-native';
 import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import backendAdminConsorcios from '../../apis/backendAdminConsorcios';
@@ -20,14 +20,25 @@ const LoginScreen = ({ navigation }) => {
                 headers: { 'Authorization': authHeader }
             })
             .then((response) => {
-                setLoggedUserInfo(response.data);
+                if (typeof(response.data.id) != 'undefined') {
+                    setLoggedUserInfo(response.data);
+                    navigation.navigate("Inicio", { loggedUserInfo: loggedUserInfo });
+                } else {
+                    Alert.alert(
+                        "Ups! Hubo un problema!",
+                        "Las credenciales de acceso son incorrectas!"
+                    );
+                }
             })
             .catch((error) => {
                 console.log(error);
+                Alert.alert(
+                    "Ups! Hubo un problema!",
+                    "Encontramos un problema al querer ingresar. Intentá mas tarde!"
+                );
             })
             .finally(() => {
                 setIsLoading(false);
-                navigation.navigate("Inicio", { loggedUserInfo: loggedUserInfo });
             });
     }
 
