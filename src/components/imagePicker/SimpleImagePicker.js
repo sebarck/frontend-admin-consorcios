@@ -47,7 +47,7 @@ export default function SimpleImagePicker(props) {
     <View>
       {/* falta agregar condicional de que si es usuario, puede agregar hasta 7.
       Si es inspector, ilimitado! No sé porque el lenght quedó con un valor menos pero anda bien */}
-      {props.imagenesLenght < 2 && (
+      {props.imagenesLenght < 6 && (
         <TouchableOpacity onPress={selectImage}>
           <View style={styles.containerImagenes}>
             <View style={styles.iconImagen}>

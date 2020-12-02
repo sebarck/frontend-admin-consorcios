@@ -1,104 +1,107 @@
-import React,{useState} from 'react';
-import {View,StyleSheet,Text,TouchableOpacity,Image,Button,TextInput} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, Image, ImageBackground, Alert } from 'react-native';
+import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import backendAdminConsorcios from '../../apis/backendAdminConsorcios';
+import base64 from 'react-native-base64';
 
-const LoginScreen = ({navigation,userInfo}) => {
-    console.log(userInfo);
+const LoginScreen = ({ navigation }) => {
 
-    const adminUser={
-        email:"ro.dominici@gmail.com",
-        password: "admin123"    }
+    const [userText, setUserText] = useState("");
+    const [userPassword, setUserPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [loggedUserInfo, setLoggedUserInfo] = useState("");
+
+    const handleLogin = () => {
+        setIsLoading(true);
+        const authHeader = 'Basic ' + base64.encode(`${userText}:${userPassword}`);
+        backendAdminConsorcios
+            .get(`/usuarios/${userText}`, {
+                headers: { 'Authorization': authHeader }
+            })
+            .then((response) => {
+                if (typeof(response.data.id) != 'undefined') {
+                    setLoggedUserInfo(response.data);
+                    navigation.navigate("Inicio", { loggedUserInfo: loggedUserInfo });
+                } else {
+                    Alert.alert(
+                        "Ups! Hubo un problema!",
+                        "Las credenciales de acceso son incorrectas!"
+                    );
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                Alert.alert(
+                    "Ups! Hubo un problema!",
+                    "Encontramos un problema al querer ingresar. Intentá mas tarde!"
+                );
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }
+
     return (
-        <View style={styles.container}>
-            <View style={styles.containerLogo}>  
-                <Image style={{width:160, height:160}} source={require('../images/logo2.png')} />
-                <Text style={styles.logoText}>TuConsorcio</Text>
+        <ImageBackground
+            style={styles.backgroundImage}
+            source={require('../images/login-background.jpg')}
+            blurRadius={1}
+        >
+            <View style={styles.container}>
+                <View style={styles.containerLogo}>
+                    <Image style={styles.logo} source={require('../images/logo.png')} />
+                    <Text style={styles.logoText}>TuConsorcio</Text>
+                </View>
+                <View style={styles.containerInputs}>
+                    <TextInput
+                        label="Usuario"
+                        value={userText}
+                        onChangeText={userText => setUserText(userText)}
+                    />
+                    <TextInput
+                        label="Contrasena"
+                        value={userPassword}
+                        secureTextEntry={true}
+                        onChangeText={userPassword => setUserPassword(userPassword)}
+                    />
+                    {isLoading
+                        ? <ActivityIndicator animating={true} color={Colors.red800} size={"large"} />
+                        : <Button mode="contained" onPress={() => handleLogin()}>INGRESAR</Button>
+                    }
+                </View>
             </View>
-
-            <View style={styles.containerButtons}>
-                <TextInput style={styles.inputbox} 
-                        placeholder='Email'
-                        placeholderTextColor="#ffffff"
-                        keyboardType="email-address" 
-                        selectionColor="#ffff"/>
-
-                <TextInput style={styles.inputbox} 
-                        placeholder='Contreña'
-                        placeholderTextColor="#ffffff"
-                        secureTextEntry={true} />
-
-                <TouchableOpacity style={styles.button} >
-                    <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-            </View>
-
-            
-
-        </View>
-        
-
-        
-
+        </ImageBackground>
     );
 }
 
 const styles = StyleSheet.create({
-    container:{
-        backgroundColor:'#2196f3',
-        flexGrow:1,
-        alignItems:'center',
-        justifyContent:'flex-end',
+    backgroundImage: {
+        flex: 1,
     },
-    containerLogo:{
-        alignItems:'center',
-        flexGrow:1,
-        marginVertical:20,
-        justifyContent: 'flex-end',
-
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center'
     },
-    containerButtons:{
-        alignItems:'center',
-        flexGrow:1,
-        marginVertical:15,
-
+    containerLogo: {
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center'
     },
-    logoText:{
-        color:'#ffffff',
-        fontSize:20,
-        marginVertical:15,
-        fontFamily:'Open Sans',
-        fontWeight:'bold'
-        },
-    inputbox:{
-        width:300,
-        backgroundColor:'#63a4ff',
-        borderRadius:5,
-        paddingHorizontal:16,
-        fontSize:16,
-        color:'#ffffff',
-        marginVertical:10,
-        fontFamily:'Open Sans',
-
+    logo: {
+        flex: 3,
+        tintColor: '#839b97',
+        width: 160,
+        height: 160
     },
-    button:{
-
-        width:300,
-        backgroundColor:'#0069c0',
-        borderRadius:25,
-        paddingVertical:12,
-        marginVertical:12,
-
-
-    },
-    buttonText:{
-        color:'#ffffff',
-        fontSize:18,
-        fontWeight:'500',
-        textAlign:'center',
-
-
+    containerInputs: {
+        justifyContent: 'space-around',
+        flex: 1,
+        marginLeft: 50,
+        marginRight: 50,
+        marginBottom: 100
     }
-
-
 });
 
 export default LoginScreen;

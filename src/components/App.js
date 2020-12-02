@@ -53,13 +53,13 @@ export default function App() {
     <PaperProvider theme={theme}>
       <View style={styles.container}>
         <NavigationContainer>
-          <Drawer.Navigator initialRouteName="Inicio">
+          <Drawer.Navigator initialRouteName="Login">
             <Drawer.Screen name="Inicio">
               {(props) => <HomeScreen {...props} userInfo={loggedUserInfo} />}
             </Drawer.Screen>
-              <Drawer.Screen name="Login">
+            <Drawer.Screen name="Login">
               {props => <LoginScreen {...props} userInfo={loggedUserInfo} />}
-                          </Drawer.Screen>
+            </Drawer.Screen>
             {loggedUserInfo.tipo == "USER" && (
               <Drawer.Screen
                 name="Crear reclamo"
@@ -92,7 +92,7 @@ export default function App() {
               name="Detalle"
               options={{ drawerLabel: "Detalle Reclamos" }}
             >
-              {(props) => <DetalleReclamoScreen {...props} />}
+              {(props) => <DetalleReclamoScreen {...props} userInfo={loggedUserInfo}/>}
             </Drawer.Screen>
           </Drawer.Navigator>
         </NavigationContainer>
