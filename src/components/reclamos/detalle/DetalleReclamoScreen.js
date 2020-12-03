@@ -176,7 +176,7 @@ const DetalleReclamoScreen = (props) => {
                     />
                   )}
 
-                  {(detalleReclamo.propiedad.id == "") && (
+                  {detalleReclamo.propiedad.id == "" && (
                     <List.Item
                       title="Área común"
                       left={(props) => (
@@ -229,17 +229,21 @@ const DetalleReclamoScreen = (props) => {
                 </Card.Content>
 
                 {/* Si está validado y es ADMIN, puede ver aprobar o rechazar
-                 detalleReclamo.estado == "VALIDADO" && */}
-                {params.loggedUserInfo.rol == "ADMIN" && (
-                  <View style={styles.buttonContainer}>
-                    <Button mode="contained" onPress={showDialogAprobar}>
-                      Aprobar
-                    </Button>
-                    <Button mode="contained" onPress={showDialogRechazarAdmin}>
-                      Rechazar
-                    </Button>
-                  </View>
-                )}
+                 */}
+                {params.loggedUserInfo.rol == "ADMIN" &&
+                  detalleReclamo.estado == "VALIDADO" && (
+                    <View style={styles.buttonContainer}>
+                      <Button mode="contained" onPress={showDialogAprobar}>
+                        Aprobar
+                      </Button>
+                      <Button
+                        mode="contained"
+                        onPress={showDialogRechazarAdmin}
+                      >
+                        Rechazar
+                      </Button>
+                    </View>
+                  )}
 
                 {/* Si es nuevo y es INSPEC, puede ver Procesar o Rechazar */}
                 {params.loggedUserInfo.rol == "INSPECTOR" &&
