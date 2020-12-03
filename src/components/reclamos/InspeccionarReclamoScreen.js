@@ -60,6 +60,7 @@ const InspeccionarReclamoScreen = (props) => {
       .post(`/reclamos/inspecciones/${detalleReclamo.id}`, postBody)
       .then((response) => {
         console.log(response.data);
+        setTextReclamo("");
       }).catch((error) => {
         console.log(error);
       });
@@ -75,7 +76,6 @@ const InspeccionarReclamoScreen = (props) => {
             setImages(
               detalleReclamo.evidencias.map((reclamo) => reclamo.imagen)
             );
-          setTextReclamo(detalleReclamo.descripcion);
         })
         .catch((error) => {
           console.log(error);
@@ -100,7 +100,7 @@ const InspeccionarReclamoScreen = (props) => {
           <View>
             <Title style={styles.titulo}>Inspección de reclamos</Title>
             <TextInput
-              label="Descripción del reclamo"
+              label="Ingrese una nota"
               value={textReclamo}
               onChangeText={(textReclamo) => setTextReclamo(textReclamo)}
               style={styles.textReclamo}
