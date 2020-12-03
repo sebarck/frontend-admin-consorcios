@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Card, FAB, Paragraph, Title } from "react-native-paper";
 import UltReclamosScreen from "../reclamos/UltReclamosScreen";
 
-const HomeScreen = ({ navigation, userInfo, route }) => {
+const HomeScreen = ({ navigation, userInfo, route, handleUserInfo }) => {
   const { loggedUserInfo } = route.params;
   switch (loggedUserInfo.rol) {
     case "USER":
       loggedUserInfo.persona = loggedUserInfo.viviente;
+      handleUserInfo(loggedUserInfo.rol);
       break;
     case "ADMIN":
       loggedUserInfo.persona = loggedUserInfo.administrador;
       loggedUserInfo.edificios = loggedUserInfo.administrador.edificios;
+      handleUserInfo(loggedUserInfo.rol);
       break;
     case "INSPECTOR":
       loggedUserInfo.persona = loggedUserInfo.inspector;
+      handleUserInfo(loggedUserInfo.rol);
       break;
   }
+
+  
 
   return (
     <View>
@@ -35,18 +40,26 @@ const HomeScreen = ({ navigation, userInfo, route }) => {
       />
       <Button
         mode="contained"
-        onPress={() => navigation.navigate("Listado reclamos", { loggedUserInfo: loggedUserInfo })}
+        onPress={() =>
+          navigation.navigate("Listado reclamos", {
+            loggedUserInfo: loggedUserInfo,
+          })
+        }
       >
         Ver todos
       </Button>
 
       {/* Solo el usuario puede "Crear nuevo reclamo" */}
-      {(loggedUserInfo.rol === "USER") && (
+      {loggedUserInfo.rol == "USER" && (
         <FAB
           style={style.fab}
           label="Crear nuevo reclamo"
           icon="pencil-plus-outline"
-          onPress={() => navigation.navigate("Crear reclamo", { loggedUserInfo: loggedUserInfo })}
+          onPress={() =>
+            navigation.navigate("Crear reclamo", {
+              loggedUserInfo: loggedUserInfo,
+            })
+          }
         />
       )}
     </View>
