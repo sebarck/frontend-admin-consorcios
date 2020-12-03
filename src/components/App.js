@@ -39,6 +39,7 @@ export default function App() {
         remoteMessage.notification.body
       );
     });
+    console.disableYellowBox = true;
 
     return unsubscribe;
   }, []);
@@ -60,7 +61,7 @@ export default function App() {
                 <HomeScreen
                   {...props}
                   userInfo={loggedUserInfoHardcoded}
-                  handleUserInfo={() => handleLoggedUserInfo}
+                  handleUserInfo={(text) => handleLoggedUserInfo(text)}
                 />
               )}
             </Drawer.Screen>
@@ -76,13 +77,13 @@ export default function App() {
               )}
             </Drawer.Screen>
 
-            {/* Si es usuario, no puede aprobar reclamos */}
-            {!(tipoUsuario == "USER") && (
+            {/* Si es usuario, no puede aprobar reclamos
+            {(tipoUsuario !== "USER") && (
               <Drawer.Screen
                 name="Aprobacion reclamos"
                 component={AprobarReclamoScreen}
               />
-            )}
+            )} */}
 
             {/* Si es usuario, no puede inspeccionar reclamos */}
             {!(tipoUsuario == "USER") && (

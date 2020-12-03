@@ -17,18 +17,18 @@ import SimpleImagePicker from "../imagePicker/SimpleImagePicker";
 
 const CrearReclamoScreen = (props) => {
   const { loggedUserInfo } = props.route.params;
-  console.log(
-    `El edificio es: ${loggedUserInfo.persona.propiedad.edificio.calle} ${loggedUserInfo.persona.propiedad.edificio.altura}, ${loggedUserInfo.persona.propiedad.edificio.barrio}`
-  );
-  console.log(
-    `Y la unidad funcional es: Piso ${loggedUserInfo.persona.propiedad.piso}, unidad ${loggedUserInfo.persona.propiedad.unidad}`
-  );
+  // console.log(
+  //   `El edificio es: ${loggedUserInfo.persona.propiedad.edificio.calle} ${loggedUserInfo.persona.propiedad.edificio.altura}, ${loggedUserInfo.persona.propiedad.edificio.barrio}`
+  // );
+  // console.log(
+  //   `Y la unidad funcional es: Piso ${loggedUserInfo.persona.propiedad.piso}, unidad ${loggedUserInfo.persona.propiedad.unidad}`
+  // );
 
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
   const showDialogAprobar = () => setVisibleAprobar(true);
   const hideDialogAprobar = () => setVisibleAprobar(false);
 
-  const [textDptoArea, setTextDptoArea] = React.useState("");
+  const [textDptoArea, setTextDptoArea] = React.useState();
   const [textReclamo, setTextReclamo] = React.useState("");
   const [tituloReclamo, setTituloReclamo] = React.useState("");
 
@@ -56,6 +56,7 @@ const CrearReclamoScreen = (props) => {
 
   const handleCrearReclamo = async () => {
     mostrarSpinner();
+    console.log(textDptoArea);
     response = await backendAdminConsorcios
       .post("/reclamos", postBody)
       .then((response) => {
@@ -104,7 +105,7 @@ const CrearReclamoScreen = (props) => {
     titulo: tituloReclamo,
     descripcion: textReclamo,
     edificio: { id: loggedUserInfo.persona.propiedad.edificio.id },
-    propiedad: { id: loggedUserInfo.persona.propiedad.id },
+    propiedad: { id: textDptoArea},
     viviente: { id: loggedUserInfo.persona.id },
     inspector: { id: 1 },
     evidencias: imagenesReclamo.reduce(
@@ -157,9 +158,10 @@ const CrearReclamoScreen = (props) => {
         }
       >
         <Picker.Item label="Seleccione una opción..." value="0" color="grey" />
-        <Picker.Item label="Edificio Monti" value="edif_monti" />
-        <Picker.Item label="Edificio Dominici" value="edif_dominici" />
-        <Picker.Item label="Edificio Pastor" value="edif_pastor" />
+        <Picker.Item
+          label={`${loggedUserInfo.persona.propiedad.edificio.calle} ${loggedUserInfo.persona.propiedad.edificio.altura}, ${loggedUserInfo.persona.propiedad.edificio.barrio}`}
+          value={loggedUserInfo.persona.propiedad.id}
+        />
       </Picker>
 
       <Title style={{ marginTop: 30, marginLeft: 20 }}>
@@ -174,8 +176,11 @@ const CrearReclamoScreen = (props) => {
         }
       >
         <Picker.Item label="Seleccione una opción..." value="0" color="grey" />
-        <Picker.Item label="Dpto 1A" value="edif_monti" />
-        <Picker.Item label="Área común" value="edif_dominici" />
+        <Picker.Item
+          label={`Piso ${loggedUserInfo.persona.propiedad.piso}, unidad ${loggedUserInfo.persona.propiedad.unidad}`}
+          value={loggedUserInfo.persona.propiedad.id}
+        />
+        <Picker.Item label="Área común" value="" />
       </Picker>
       <Title style={{ marginTop: 30, marginLeft: 20 }}>Descripción</Title>
 

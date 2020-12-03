@@ -166,6 +166,25 @@ const DetalleReclamoScreen = (props) => {
                       <List.Icon {...props} icon="home-city-outline" />
                     )}
                   />
+
+                  {!(detalleReclamo.propiedad.id == "") && (
+                    <List.Item
+                      title={`Piso ${detalleReclamo.propiedad.piso}, unidad ${detalleReclamo.propiedad.unidad}`}
+                      left={(props) => (
+                        <List.Icon {...props} icon="home-variant" />
+                      )}
+                    />
+                  )}
+
+                  {(detalleReclamo.propiedad.id == "") && (
+                    <List.Item
+                      title="Área común"
+                      left={(props) => (
+                        <List.Icon {...props} icon="home-group" />
+                      )}
+                    />
+                  )}
+
                   <List.Item
                     title={detalleReclamo.descripcion}
                     titleNumberOfLines={4}
