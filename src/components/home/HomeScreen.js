@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, ScrollView, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, Card, FAB, Paragraph, Title } from "react-native-paper";
 import UltReclamosScreen from "../reclamos/UltReclamosScreen";
 
@@ -11,6 +11,7 @@ const HomeScreen = ({ navigation, userInfo, route }) => {
       break;
     case "ADMIN":
       loggedUserInfo.persona = loggedUserInfo.administrador;
+      loggedUserInfo.edificios = loggedUserInfo.administrador.edificios;
       break;
     case "INSPECTOR":
       loggedUserInfo.persona = loggedUserInfo.inspector;
@@ -40,12 +41,12 @@ const HomeScreen = ({ navigation, userInfo, route }) => {
       </Button>
 
       {/* Solo el usuario puede "Crear nuevo reclamo" */}
-      {(loggedUserInfo.tipo === "USER") && (
+      {(loggedUserInfo.rol === "USER") && (
         <FAB
           style={style.fab}
           label="Crear nuevo reclamo"
           icon="pencil-plus-outline"
-          onPress={() => navigation.navigate("Crear reclamo")}
+          onPress={() => navigation.navigate("Crear reclamo", { loggedUserInfo: loggedUserInfo })}
         />
       )}
     </View>

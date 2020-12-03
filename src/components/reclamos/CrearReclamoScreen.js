@@ -16,6 +16,10 @@ import ImagesSlider from "../imagesSlider/ImagesSlider";
 import SimpleImagePicker from "../imagePicker/SimpleImagePicker";
 
 const CrearReclamoScreen = (props) => {
+  const { loggedUserInfo } = props.route.params;
+  console.log(`El edificio es: ${loggedUserInfo.persona.propiedad.edificio.calle} ${loggedUserInfo.persona.propiedad.edificio.altura}, ${loggedUserInfo.persona.propiedad.edificio.barrio}`);
+  console.log(`Y la unidad funcional es: Piso ${loggedUserInfo.persona.propiedad.piso}, unidad ${loggedUserInfo.persona.propiedad.unidad}`);
+
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
   const showDialogAprobar = () => setVisibleAprobar(true);
   const hideDialogAprobar = () => setVisibleAprobar(false);
@@ -48,7 +52,7 @@ const CrearReclamoScreen = (props) => {
   const handleCrearReclamo = async () => {
     // console.log(params);
     mostrarSpinner();
-    response = await backendAdminConsorcios.post('/reclamos', params)
+    response = await backendAdminConsorcios.post('/reclamos', postBody)
       .then((response) => {
         //console.log(response);
         setIsSuccess(true);
@@ -84,18 +88,18 @@ const CrearReclamoScreen = (props) => {
     ]);
   }
 
-  const params = JSON.stringify({
+  const postBody = JSON.stringify({
     categoria: selectedValueTipoReclamo,
     titulo: "Arreglos generales",
     descripcion: textReclamo,
-    edificio: { id: 1 },
-    propiedad: { id: 1 },
-    viviente: { id: 1 },
-    evidencias: imagenesReclamo.reduce((evidencias, evidencia) => [...evidencias, {imagen: evidencia}], []),
+    edificio: { id: loggedUserInfo.persona.propiedad.edificio.id },
+    propiedad: { id: loggedUserInfo.persona.propiedad.id },
+    viviente: { id: loggedUserInfo.persona.id },
+    evidencias: imagenesReclamo.reduce((evidencias, evidencia) => [...evidencias, { imagen: evidencia }], []),
   });
 
   useEffect(() => {
-      deleteAllItem();
+    deleteAllItem();
   }, [flagCancelarReclamo]);
 
   function deleteAllItem() {
