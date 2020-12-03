@@ -20,9 +20,6 @@ const InspeccionarReclamoScreen = (props) => {
   const [visibleProcesar, setvisibleProcesar] = React.useState(false);
   const showDialogAprobar = () => setvisibleProcesar(true);
 
-  const [visibleActualizar, setVisibleActualizar] = React.useState(false);
-  const showDialogActualizar = () => setVisibleActualizar(true);
-
   const hideDialogActualizar = (reclamo) => {
     setVisibleActualizar(false);
     console.log("Reclamo actualizado por inspector");
@@ -36,35 +33,15 @@ const InspeccionarReclamoScreen = (props) => {
   };
 
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading1, setIsLoading1] = React.useState(false);
 
   const [textReclamo, setTextReclamo] = React.useState("");
 
-  function setImagenesReclamoLenght() { }
+  function setImagenesReclamoLenght() {}
 
   const { params } = props.route;
   const [detalleReclamo, setDetalleReclamo] = React.useState("");
   const [images, setImages] = React.useState([]);
-
-  function addItem(imageSource) {
-    setImages([...images, `data:image/png;base64,${imageSource}`]);
-  }
-
-  const postBody = JSON.stringify({
-    notas: textReclamo,
-    id: detalleReclamo.id,
-    evidencias: imagenesReclamo.reduce((evidencias, evidencia) => [...evidencias, { imagen: evidencia }], []),
-  });
-
-  const handleValidar = async (detalleReclamo) => {
-    backendAdminConsorcios
-      .post(`/reclamos/inspecciones/${detalleReclamo.id}`, postBody)
-      .then((response) => {
-        console.log(response.data);
-        setTextReclamo("");
-      }).catch((error) => {
-        console.log(error);
-      });
-  }
 
   useEffect(() => {
     const obtenerReclamos = async ({ reclamo }) => {
@@ -87,36 +64,67 @@ const InspeccionarReclamoScreen = (props) => {
     return () => setIsLoading(true);
   }, [props]);
 
+  function addItem(imageSource) {
+    setImages([...images, `data:image/png;base64,${imageSource}`]);
+  }
+
+  const postBody = JSON.stringify({
+    notas: textReclamo,
+    id: detalleReclamo.id,
+    evidencias: images.reduce(
+      (evidencias, evidencia) => [...evidencias, { imagen: evidencia }],
+      []
+    ),
+  });
+
+  const handleValidar = async (detalleReclamo) => {
+    setIsLoading1(true);
+    backendAdminConsorcios
+      .post(`/reclamos/inspecciones/${detalleReclamo.id}`, postBody)
+      .then((response) => {
+        console.log(response.data);
+        setIsLoading1(false);
+        showDialogAprobar();
+        setTextReclamo("");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <ScrollView>
       {isLoading ? (
         <View style={{ flex: 1, alignItems: "center", width: 350 }}>
           <Subheading style={styles.loadingInfo}>
-            Estamos recuperando el detalle de tu reclamo
+            Estamos recuperando el detalle del reclamo
           </Subheading>
           <ActivityIndicator animating={true} size={"large"} />
         </View>
       ) : (
-          <View>
-            <Title style={styles.titulo}>Inspección de reclamos</Title>
-            <TextInput
-              label="Ingrese una nota"
-              value={textReclamo}
-              onChangeText={(textReclamo) => setTextReclamo(textReclamo)}
-              style={styles.textReclamo}
-              numberOfLines={20}
-              multiline={true}
-            />
+        <View>
+          <Title style={styles.titulo}>Inspección de reclamos</Title>
+          <TextInput
+            label="Ingrese una nota"
+            value={textReclamo}
+            onChangeText={(textReclamo) => setTextReclamo(textReclamo)}
+            style={styles.textReclamo}
+            numberOfLines={20}
+            multiline={true}
+          />
 
-            <SimpleImagePicker
-              arrayImagenes={images}
-              imagenesLenght={0}
-              addItemFunction={addItem}
-              setImagenesReclamoLenghtFunction={setImagenesReclamoLenght}
-            />
+          <SimpleImagePicker
+            arrayImagenes={images}
+            imagenesLenght={0}
+            addItemFunction={addItem}
+            setImagenesReclamoLenghtFunction={setImagenesReclamoLenght}
+          />
 
-            <ImagesSlider imagenes={images} />
+          <ImagesSlider imagenes={images} />
 
+          {isLoading1 ? (
+            <ActivityIndicator animating={true} size={"small"} />
+          ) : (
             <View style={styles.container}>
               <View style={styles.buttonContainer}>
                 <Button
@@ -127,58 +135,28 @@ const InspeccionarReclamoScreen = (props) => {
                   labelStyle={styles.buttonsLabel}
                 >
                   Procesar
-              </Button>
-              </View>
-              <View style={styles.buttonContainer}>
-                <Button
-                  mode="contained"
-                  color="blue"
-                  style={styles.buttons}
-                  compact="true"
-                  labelStyle={styles.buttonsLabel}
-                  onPress={showDialogActualizar}
-                >
-                  Guardar
-              </Button>
+                </Button>
               </View>
             </View>
-          </View>
-        )}
+          )}
+        </View>
+      )}
 
       <Portal>
-        <Dialog visible={visibleProcesar} onDismiss={() => hideDialogProcesar(detalleReclamo)}>
+        <Dialog
+          visible={visibleProcesar}
+          onDismiss={() => hideDialogProcesar(detalleReclamo)}
+        >
           <Dialog.Title>Reclamo procesado</Dialog.Title>
           <Dialog.Actions>
-            <Button color="black" onPress={() => hideDialogProcesar(detalleReclamo)}>Ok</Button>
+            <Button
+              color="black"
+              onPress={() => hideDialogProcesar(detalleReclamo)}
+            >
+              Ok
+            </Button>
           </Dialog.Actions>
         </Dialog>
-
-        <Dialog
-          visible={visibleActualizar}
-          onDismiss={() => hideDialogActualizar(detalleReclamo)}
-        >
-          <Dialog.Title>Reclamo actualizado</Dialog.Title>
-          <Dialog.Actions>
-            <Button color="black" onPress={() => hideDialogActualizar(detalleReclamo)}>Ok</Button>
-          </Dialog.Actions>
-        </Dialog>
-
-        {/* <Dialog visible={visibleRechazar} onDismiss={hideDialogRechazar}>
-          <Dialog.Title>Motivo de rechazo</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-              // label="Email"
-              // value={text}
-              // onChangeText={(text) => setText(text)}
-              style={styles.comentarioResolucionReclamo}
-              multiline={true}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={hideDialogRechazar}>Cancel</Button>
-            <Button onPress={() => console.log("Ok")}>Ok</Button>
-          </Dialog.Actions>
-        </Dialog> */}
       </Portal>
     </ScrollView>
   );

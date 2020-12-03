@@ -16,7 +16,7 @@ import LoginScreen from "./login/LoginScreen";
 
 const loggedUserInfoHardcoded = {
   idViviente: 1,
-  tipo: "USER",
+  tipo: "INSPECTOR",
 };
 
 const theme = {
