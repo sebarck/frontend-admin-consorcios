@@ -1,20 +1,23 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Card, FAB, Paragraph, Title } from "react-native-paper";
 import UltReclamosScreen from "../reclamos/UltReclamosScreen";
 
-const HomeScreen = ({ navigation, userInfo, route }) => {
+const HomeScreen = ({ navigation, userInfo, route, handleUserInfo }) => {
   const { loggedUserInfo } = route.params;
   switch (loggedUserInfo.rol) {
     case "USER":
       loggedUserInfo.persona = loggedUserInfo.viviente;
+      handleUserInfo(loggedUserInfo.rol);
       break;
     case "ADMIN":
       loggedUserInfo.persona = loggedUserInfo.administrador;
       loggedUserInfo.edificios = loggedUserInfo.administrador.edificios;
+      handleUserInfo(loggedUserInfo.rol);
       break;
     case "INSPECTOR":
       loggedUserInfo.persona = loggedUserInfo.inspector;
+      handleUserInfo(loggedUserInfo.rol);
       break;
   }
 
@@ -23,6 +26,7 @@ const HomeScreen = ({ navigation, userInfo, route }) => {
       <Card>
         <Card.Cover source={{ uri: "https://picsum.photos/700" }} />
         <Card.Content>
+        
           <Title>Bienvenido, {loggedUserInfo.persona.nombre}!</Title>
           <Paragraph>Tu perfil es {loggedUserInfo.rol}! :)</Paragraph>
         </Card.Content>

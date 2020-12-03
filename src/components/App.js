@@ -6,9 +6,7 @@ import ReclamosScreen from "./reclamos/ReclamosScreen";
 import AprobarReclamoScreen from "./reclamos/AprobarReclamoScreen";
 import CrearReclamoScreen from "./reclamos/CrearReclamoScreen";
 import InspeccionarReclamoScreen from "./reclamos/InspeccionarReclamoScreen";
-import {
-  createDrawerNavigator,
-} from "@react-navigation/drawer";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import messaging from "@react-native-firebase/messaging";
 import DetalleReclamoScreen from "./reclamos/detalle/DetalleReclamoScreen";
@@ -16,7 +14,7 @@ import LoginScreen from "./login/LoginScreen";
 
 const loggedUserInfoHardcoded = {
   idViviente: 1,
-  tipo: "INSPECTOR",
+  tipo: "USER",
 };
 
 const theme = {
@@ -45,15 +43,28 @@ export default function App() {
     return unsubscribe;
   }, []);
 
+  const [tipoUsuario, setTipoUsuario] = React.useState("");
+
+  function handleLoggedUserInfo(text) {
+    setTipoUsuario(text);
+    console.log("Seteo tipo de usuario");
+  }
+
   return (
     <PaperProvider theme={theme}>
       <View style={styles.container}>
         <NavigationContainer>
           <Drawer.Navigator initialRouteName="Logout">
             <Drawer.Screen name="Inicio">
-              {(props) => <HomeScreen {...props} userInfo={loggedUserInfoHardcoded} />}
+              {(props) => (
+                <HomeScreen
+                  {...props}
+                  userInfo={loggedUserInfoHardcoded}
+                  handleUserInfo={() => handleLoggedUserInfo}
+                />
+              )}
             </Drawer.Screen>
-            {loggedUserInfoHardcoded.tipo == "USER" && (
+            {tipoUsuario == "USER" && (
               <Drawer.Screen
                 name="Crear reclamo"
                 component={CrearReclamoScreen}
@@ -66,7 +77,7 @@ export default function App() {
             </Drawer.Screen>
 
             {/* Si es usuario, no puede aprobar reclamos */}
-            {!(loggedUserInfoHardcoded.tipo == "USER") && (
+            {!(tipoUsuario == "USER") && (
               <Drawer.Screen
                 name="Aprobacion reclamos"
                 component={AprobarReclamoScreen}
@@ -74,7 +85,7 @@ export default function App() {
             )}
 
             {/* Si es usuario, no puede inspeccionar reclamos */}
-            {!(loggedUserInfoHardcoded.tipo == "USER") && (
+            {!(tipoUsuario == "USER") && (
               <Drawer.Screen
                 name="Reclamos a validar"
                 component={InspeccionarReclamoScreen}
@@ -85,10 +96,15 @@ export default function App() {
               name="Detalle"
               options={{ drawerLabel: "Detalle Reclamos" }}
             >
-              {(props) => <DetalleReclamoScreen {...props} userInfo={loggedUserInfoHardcoded}/>}
+              {(props) => (
+                <DetalleReclamoScreen
+                  {...props}
+                  userInfo={loggedUserInfoHardcoded}
+                />
+              )}
             </Drawer.Screen>
             <Drawer.Screen name="Logout">
-              {props => <LoginScreen {...props} />}
+              {(props) => <LoginScreen {...props} />}
             </Drawer.Screen>
           </Drawer.Navigator>
         </NavigationContainer>

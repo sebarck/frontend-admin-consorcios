@@ -17,8 +17,12 @@ import SimpleImagePicker from "../imagePicker/SimpleImagePicker";
 
 const CrearReclamoScreen = (props) => {
   const { loggedUserInfo } = props.route.params;
-  console.log(`El edificio es: ${loggedUserInfo.persona.propiedad.edificio.calle} ${loggedUserInfo.persona.propiedad.edificio.altura}, ${loggedUserInfo.persona.propiedad.edificio.barrio}`);
-  console.log(`Y la unidad funcional es: Piso ${loggedUserInfo.persona.propiedad.piso}, unidad ${loggedUserInfo.persona.propiedad.unidad}`);
+  console.log(
+    `El edificio es: ${loggedUserInfo.persona.propiedad.edificio.calle} ${loggedUserInfo.persona.propiedad.edificio.altura}, ${loggedUserInfo.persona.propiedad.edificio.barrio}`
+  );
+  console.log(
+    `Y la unidad funcional es: Piso ${loggedUserInfo.persona.propiedad.piso}, unidad ${loggedUserInfo.persona.propiedad.unidad}`
+  );
 
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
   const showDialogAprobar = () => setVisibleAprobar(true);
@@ -26,6 +30,7 @@ const CrearReclamoScreen = (props) => {
 
   const [textDptoArea, setTextDptoArea] = React.useState("");
   const [textReclamo, setTextReclamo] = React.useState("");
+  const [tituloReclamo, setTituloReclamo] = React.useState("");
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(true);
@@ -50,16 +55,22 @@ const CrearReclamoScreen = (props) => {
   };
 
   const handleCrearReclamo = async () => {
-    // console.log(params);
     mostrarSpinner();
-    response = await backendAdminConsorcios.post('/reclamos', postBody)
+    response = await backendAdminConsorcios
+      .post("/reclamos", postBody)
       .then((response) => {
         //console.log(response);
         setIsSuccess(true);
         setIdReclamoCreado(response.data.id);
         ocultarSpinner();
         showDialogAprobar();
-      }).catch((error) => {
+        setTextDptoArea("");
+        setSelectedValueEdificio(0);
+        setSelectedValueTipoReclamo(0);
+        setTextReclamo("");
+        setTituloReclamo("");
+      })
+      .catch((error) => {
         setErrorDetail(error.response.data.error);
         setIsSuccess(false);
         ocultarSpinner();
@@ -84,18 +95,22 @@ const CrearReclamoScreen = (props) => {
   function addItem(imageSource) {
     setImagenesReclamo([
       ...imagenesReclamo,
-      `data:image/png;base64,${imageSource}`
+      `data:image/png;base64,${imageSource}`,
     ]);
   }
 
   const postBody = JSON.stringify({
     categoria: selectedValueTipoReclamo,
-    titulo: "Arreglos generales",
+    titulo: tituloReclamo,
     descripcion: textReclamo,
     edificio: { id: loggedUserInfo.persona.propiedad.edificio.id },
     propiedad: { id: loggedUserInfo.persona.propiedad.id },
     viviente: { id: loggedUserInfo.persona.id },
-    evidencias: imagenesReclamo.reduce((evidencias, evidencia) => [...evidencias, { imagen: evidencia }], []),
+    inspector: { id: 1 },
+    evidencias: imagenesReclamo.reduce(
+      (evidencias, evidencia) => [...evidencias, { imagen: evidencia }],
+      []
+    ),
   });
 
   useEffect(() => {
@@ -109,6 +124,15 @@ const CrearReclamoScreen = (props) => {
 
   return (
     <ScrollView>
+      <Title style={{ marginTop: 30, marginLeft: 20 }}>Título</Title>
+      <TextInput
+        label="Inserte un título"
+        value={tituloReclamo}
+        onChangeText={(tituloReclamo) => setTituloReclamo(tituloReclamo)}
+        style={styles.tituloReclamo}
+        numberOfLines={2}
+        multiline={true}
+      />
       <Title style={{ marginTop: 30, marginLeft: 20 }}>Tipo de reclamo</Title>
       <Picker
         selectedValue={selectedValueTipoReclamo}
@@ -153,9 +177,10 @@ const CrearReclamoScreen = (props) => {
         <Picker.Item label="Dpto 1A" value="edif_monti" />
         <Picker.Item label="Área común" value="edif_dominici" />
       </Picker>
+      <Title style={{ marginTop: 30, marginLeft: 20 }}>Descripción</Title>
 
       <TextInput
-        label="Descripción del reclamo"
+        label="Ingrese una descripción"
         value={textReclamo}
         onChangeText={(textReclamo) => setTextReclamo(textReclamo)}
         style={styles.textReclamo}
@@ -179,30 +204,30 @@ const CrearReclamoScreen = (props) => {
           size={"large"}
         />
       ) : (
-          <View style={styles.container}>
-            <View style={styles.buttonContainer}>
-              <Button
-                mode="contained"
-                color="green"
-                style={styles.buttons}
-                // onPress={() => console.log("Pressed")}
-                onPress={handleCrearReclamo}
-              >
-                Crear
+        <View style={styles.container}>
+          <View style={styles.buttonContainer}>
+            <Button
+              mode="contained"
+              color="green"
+              style={styles.buttons}
+              // onPress={() => console.log("Pressed")}
+              onPress={handleCrearReclamo}
+            >
+              Crear
             </Button>
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                mode="contained"
-                color="red"
-                style={styles.buttons}
-                onPress={handleCancelar}
-              >
-                Cancelar
-            </Button>
-            </View>
           </View>
-        )}
+          <View style={styles.buttonContainer}>
+            <Button
+              mode="contained"
+              color="red"
+              style={styles.buttons}
+              onPress={handleCancelar}
+            >
+              Cancelar
+            </Button>
+          </View>
+        </View>
+      )}
       <Portal>
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
           {isSuccess ? (
@@ -216,20 +241,20 @@ const CrearReclamoScreen = (props) => {
               </Dialog.Content>
             </View>
           ) : (
-              <View>
-                <Dialog.Title>Ups! Hubo un problema! </Dialog.Title>
-                <Dialog.Content>
-                  <Paragraph>
-                    Lamentablemente hubo un problema al intentar registrar el
+            <View>
+              <Dialog.Title>Ups! Hubo un problema! </Dialog.Title>
+              <Dialog.Content>
+                <Paragraph>
+                  Lamentablemente hubo un problema al intentar registrar el
                   reclamo.{" "}
-                  </Paragraph>
-                  <Paragraph>
-                    Por favor, pasale el siguiente detalle al administrador:{" "}
-                    {errorDetail}
-                  </Paragraph>
-                </Dialog.Content>
-              </View>
-            )}
+                </Paragraph>
+                <Paragraph>
+                  Por favor, pasale el siguiente detalle al administrador:{" "}
+                  {errorDetail}
+                </Paragraph>
+              </Dialog.Content>
+            </View>
+          )}
           <Dialog.Actions>
             <Button onPress={() => handleCerrarDialogSuccess()}>OK</Button>
           </Dialog.Actions>
@@ -258,6 +283,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     height: 200,
+  },
+  tituloReclamo: {
+    color: "red",
+    fontWeight: "bold",
+    textAlignVertical: "top",
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
   },
 
   dropdownReclamo: {

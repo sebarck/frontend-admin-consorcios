@@ -20,6 +20,7 @@ import moment from "moment";
 const DetalleReclamoScreen = (props) => {
   const { params } = props.route;
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading1, setIsLoading1] = React.useState(false);
   const [detalleReclamo, setDetalleReclamo] = React.useState("");
   const [images, setImages] = React.useState([]);
 
@@ -76,6 +77,7 @@ const DetalleReclamoScreen = (props) => {
             setImages(
               detalleReclamo.evidencias.map((reclamo) => reclamo.imagen)
             );
+          console.log(response.data.fechaResolucion);
         })
         .catch((error) => {
           console.log(error);
@@ -92,27 +94,28 @@ const DetalleReclamoScreen = (props) => {
     props.navigation.navigate("Reclamos a validar", { reclamo: reclamo });
   };
 
-  const postBodyAprobarAdmin = JSON.stringify({
-    id: detalleReclamo.id,
-    notas: textNotaAprobacionAdmin,
-  });
-
   const [dateString, setDateString] = React.useState("");
 
-  var day = moment(dateString, "DD/MM/YYYY");
+  var day = moment(dateString, "DD/MM/YYYY").format("YYYY-MM-DD");
 
   const postBodyRechazo = JSON.stringify({
     id: detalleReclamo.id,
     notas: textMotivoRechazo,
   });
 
+  const postBodyAprobarAdmin = JSON.stringify({
+    id: detalleReclamo.id,
+    notas: textNotaAprobacionAdmin,
+    fechaResolucion: day,
+  });
+
   const handleAprobarAdmin = async () => {
-    setIsLoading(true);
+    setIsLoading1(true);
     backendAdminConsorcios
       .post(`/reclamos/aprobaciones/${detalleReclamo.id}`, postBodyAprobarAdmin)
       .then((response) => {
-        console.log(day.toDate());
-        setIsLoading(false);
+        console.log(day);
+        setIsLoading1(false);
         showAlertAprobado();
         setTextNotaAprobacionAdmin("");
         setDateString("");
@@ -123,11 +126,11 @@ const DetalleReclamoScreen = (props) => {
   };
 
   const handleRechazar = async () => {
-    setIsLoading(true);
+    setIsLoading1(true);
     backendAdminConsorcios
       .post(`/reclamos/rechazos/${detalleReclamo.id}`, postBodyRechazo)
       .then((response) => {
-        setIsLoading(false);
+        setIsLoading1(false);
         showAlertRechazoAdmin();
         setTextMotivoRechazo("");
       })
@@ -177,7 +180,7 @@ const DetalleReclamoScreen = (props) => {
                       <List.Icon {...props} icon="progress-wrench" />
                     )}
                   />
-                  {!(detalleReclamo.notas == "") && (
+                  {!(detalleReclamo.notas == null) && (
                     <List.Item
                       title="Notas"
                       description={detalleReclamo.notas}
@@ -207,12 +210,29 @@ const DetalleReclamoScreen = (props) => {
                 </Card.Content>
 
                 {/* Si está validado y es ADMIN, puede ver aprobar o rechazar
-                 */}
-                {params.loggedUserInfo.rol == "ADMIN" &&
-                  detalleReclamo.estado == "VALIDADO" && (
+                 detalleReclamo.estado == "VALIDADO" && */}
+                {params.loggedUserInfo.rol == "ADMIN" && (
+                  <View style={styles.buttonContainer}>
+                    <Button mode="contained" onPress={showDialogAprobar}>
+                      Aprobar
+                    </Button>
+                    <Button mode="contained" onPress={showDialogRechazarAdmin}>
+                      Rechazar
+                    </Button>
+                  </View>
+                )}
+
+                {/* Si es nuevo y es INSPEC, puede ver Procesar o Rechazar */}
+                {params.loggedUserInfo.rol == "INSPECTOR" &&
+                  detalleReclamo.estado == "NUEVO" && (
                     <View style={styles.buttonContainer}>
-                      <Button mode="contained" onPress={showDialogAprobar}>
-                        Aprobar
+                      <Button
+                        mode="contained"
+                        onPress={() => {
+                          handleAccionInspeccionar(detalleReclamo);
+                        }}
+                      >
+                        Procesar
                       </Button>
                       <Button
                         mode="contained"
@@ -222,24 +242,6 @@ const DetalleReclamoScreen = (props) => {
                       </Button>
                     </View>
                   )}
-
-                {/* Si es nuevo y es INSPEC, puede ver Procesar o Rechazar 
-                detalleReclamo.estado == "NUEVO" &&*/}
-                {params.loggedUserInfo.rol == "INSPECTOR" && (
-                  <View style={styles.buttonContainer}>
-                    <Button
-                      mode="contained"
-                      onPress={() => {
-                        handleAccionInspeccionar(detalleReclamo);
-                      }}
-                    >
-                      Procesar
-                    </Button>
-                    <Button mode="contained" onPress={showDialogRechazarAdmin}>
-                      Rechazar
-                    </Button>
-                  </View>
-                )}
               </ScrollView>
             </View>
           )}
@@ -268,7 +270,7 @@ const DetalleReclamoScreen = (props) => {
               multiline={true}
             />
           </Dialog.Content>
-          {!isLoading ? (
+          {!isLoading1 ? (
             <Dialog.Actions>
               <Button color="black" onPress={hideDialogAprobar}>
                 Cancel
@@ -298,7 +300,7 @@ const DetalleReclamoScreen = (props) => {
               multiline={true}
             />
           </Dialog.Content>
-          {!isLoading ? (
+          {!isLoading1 ? (
             <Dialog.Actions>
               <Button color="black" onPress={hideDialogRechazarAdmin}>
                 Cancel
@@ -310,6 +312,7 @@ const DetalleReclamoScreen = (props) => {
           ) : (
             <ActivityIndicator animating={true} size={"small"} />
           )}
+          <Paragraph></Paragraph>
         </Dialog>
         <Dialog
           visible={visibleAlertRechazo}
