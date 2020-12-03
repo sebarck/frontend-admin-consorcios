@@ -34,6 +34,10 @@ const DetalleReclamoScreen = (props) => {
 
   const [textMotivoRechazo, setTextMotivoRechazo] = React.useState("");
 
+  const [textNotaAprobacionAdmin, setTextNotaAprobacionAdmin] = React.useState(
+    ""
+  );
+
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
   const showDialogAprobar = () => setVisibleAprobar(true);
   const hideDialogAprobar = () => setVisibleAprobar(false);
@@ -43,17 +47,14 @@ const DetalleReclamoScreen = (props) => {
     setVisibleAlertRechazo(true);
     console.log("Rechazo de administrador");
   };
-  const showAlertRechazoInspec = () => {
-    setVisibleAlertRechazo(true);
-    console.log("Rechazo de inspector");
-  };
+
   const hideAlertRechazo = (reclamo) => {
     setVisibleAlertRechazo(false);
     hideDialogRechazarInspec();
     hideDialogRechazarAdmin();
-    props.navigation.navigate("Detalle", { reclamo: reclamo })
+    props.navigation.navigate("Detalle", { reclamo: reclamo });
   };
-  
+
   const [visibleAlertAprobado, setVisibleAlertAprobado] = React.useState(false);
   const showAlertAprobado = () => {
     setVisibleAlertAprobado(true);
@@ -61,9 +62,8 @@ const DetalleReclamoScreen = (props) => {
   const hideAlertAprobado = (reclamo) => {
     setVisibleAlertAprobado(false);
     hideDialogAprobar();
-    props.navigation.navigate("Detalle", { reclamo: reclamo })
+    props.navigation.navigate("Detalle", { reclamo: reclamo });
   };
-
 
   useEffect(() => {
     const obtenerReclamos = async ({ reclamo }) => {
@@ -91,8 +91,9 @@ const DetalleReclamoScreen = (props) => {
     props.navigation.navigate("Reclamos a validar", { reclamo: reclamo });
   };
 
-  const postBody = JSON.stringify({
+  const postBodyAprobarAdmin = JSON.stringify({
     id: detalleReclamo.id,
+    notas: textNotaAprobacionAdmin,
   });
 
   const postBodyRechazo = JSON.stringify({
@@ -102,23 +103,27 @@ const DetalleReclamoScreen = (props) => {
 
   const handleAprobarAdmin = async () => {
     backendAdminConsorcios
-      .post(`/reclamos/aprobaciones/${detalleReclamo.id}`, postBody)
+      .post(`/reclamos/aprobaciones/${detalleReclamo.id}`, postBodyAprobarAdmin)
       .then((response) => {
         showAlertAprobado();
-      }).catch((error) => {
+        setTextMotivoRechazo("");
+      })
+      .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   const handleRechazar = async () => {
     backendAdminConsorcios
       .post(`/reclamos/rechazos/${detalleReclamo.id}`, postBodyRechazo)
       .then((response) => {
         showAlertRechazoAdmin();
-      }).catch((error) => {
+        setTextMotivoRechazo("");
+      })
+      .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -161,20 +166,19 @@ const DetalleReclamoScreen = (props) => {
                       <List.Icon {...props} icon="progress-wrench" />
                     )}
                   />
+                  {!(detalleReclamo.notas == "") && (
+                    <List.Item
+                      title="Notas"
+                      description={detalleReclamo.notas}
+                      left={(props) => <List.Icon {...props} icon="note" />}
+                    />
+                  )}
+
                   <List.Item
                     title="Fecha de creación"
                     description={detalleReclamo.fechaCreacion}
                     left={(props) => (
                       <List.Icon {...props} icon="calendar-month-outline" />
-                    )}
-                  />
-                  <List.Item
-                    title="Fecha comienzo de obras"
-                    description={
-                      detalleReclamo.fechaComienzoObras || "No asignada"
-                    }
-                    left={(props) => (
-                      <List.Icon {...props} icon="calendar-clock" />
                     )}
                   />
                   <List.Item
@@ -191,7 +195,8 @@ const DetalleReclamoScreen = (props) => {
                   </View>
                 </Card.Content>
 
-                {/* Si está validado y es ADMIN, puede ver aprobar o rechazar */}
+                {/* Si está validado y es ADMIN, puede ver aprobar o rechazar
+                 */}
                 {params.loggedUserInfo.rol == "ADMIN" &&
                   detalleReclamo.estado == "VALIDADO" && (
                     <View style={styles.buttonContainer}>
@@ -234,29 +239,6 @@ const DetalleReclamoScreen = (props) => {
       </Surface>
 
       <Portal>
-        <Dialog
-          visible={visibleRechazarInspec}
-          onDismiss={hideDialogRechazarInspec}
-        >
-          <Dialog.Title>Motivo de rechazo</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-              value={textMotivoRechazo}
-              onChangeText={(textMotivoRechazo) => setTextMotivoRechazo(textMotivoRechazo)}
-              style={styles.comentarioResolucionReclamo}
-              multiline={true}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button color="black" onPress={hideDialogRechazarInspec}>
-              Cancel
-            </Button>
-            <Button color="black" onPress={showAlertRechazoInspec}>
-              Ok
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
           <Dialog.Title>Fecha de resolución</Dialog.Title>
           <Dialog.Content>
@@ -270,9 +252,10 @@ const DetalleReclamoScreen = (props) => {
           <Dialog.Title>Comentario</Dialog.Title>
           <Dialog.Content>
             <TextInput
-              // label="Email"
-              // value={text}
-              // onChangeText={(text) => setText(text)}
+              value={textNotaAprobacionAdmin}
+              onChangeText={(textNotaAprobacionAdmin) =>
+                setTextNotaAprobacionAdmin(textNotaAprobacionAdmin)
+              }
               style={styles.comentarioResolucionReclamo}
               multiline={true}
             />
@@ -294,9 +277,10 @@ const DetalleReclamoScreen = (props) => {
           <Dialog.Title>Motivo de rechazo</Dialog.Title>
           <Dialog.Content>
             <TextInput
-              // label="Email"
-              // value={text}
-              // onChangeText={(text) => setText(text)}
+              value={textMotivoRechazo}
+              onChangeText={(textMotivoRechazo) =>
+                setTextMotivoRechazo(textMotivoRechazo)
+              }
               style={styles.comentarioResolucionReclamo}
               multiline={true}
             />
@@ -310,18 +294,30 @@ const DetalleReclamoScreen = (props) => {
             </Button>
           </Dialog.Actions>
         </Dialog>
-        <Dialog visible={visibleAlertRechazo} onDismiss={() => hideAlertRechazo(detalleReclamo)}>
+        <Dialog
+          visible={visibleAlertRechazo}
+          onDismiss={() => hideAlertRechazo(detalleReclamo)}
+        >
           <Dialog.Title>Reclamo rechazado</Dialog.Title>
           <Dialog.Actions>
-            <Button color="black" onPress={() => hideAlertRechazo(detalleReclamo)}>
+            <Button
+              color="black"
+              onPress={() => hideAlertRechazo(detalleReclamo)}
+            >
               Ok
             </Button>
           </Dialog.Actions>
         </Dialog>
-        <Dialog visible={visibleAlertAprobado} onDismiss={() => hideAlertAprobado(detalleReclamo)}>
+        <Dialog
+          visible={visibleAlertAprobado}
+          onDismiss={() => hideAlertAprobado(detalleReclamo)}
+        >
           <Dialog.Title>Reclamo aprobado</Dialog.Title>
           <Dialog.Actions>
-            <Button color="black" onPress={() => hideAlertAprobado(detalleReclamo)}>
+            <Button
+              color="black"
+              onPress={() => hideAlertAprobado(detalleReclamo)}
+            >
               Ok
             </Button>
           </Dialog.Actions>
