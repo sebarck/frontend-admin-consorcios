@@ -15,6 +15,7 @@ import {
 } from "react-native-paper";
 import backendAdminConsorcios from "../../../apis/backendAdminConsorcios";
 import ImagesSlider from "../../imagesSlider/ImagesSlider";
+import moment from "moment";
 
 const DetalleReclamoScreen = (props) => {
   const { params } = props.route;
@@ -96,15 +97,22 @@ const DetalleReclamoScreen = (props) => {
     notas: textNotaAprobacionAdmin,
   });
 
+  const [dateString, setDateString] = React.useState("");
+
+  var day = moment(dateString, "DD/MM/YYYY");
+
   const postBodyRechazo = JSON.stringify({
     id: detalleReclamo.id,
     notas: textMotivoRechazo,
+    fechaResolucion: day.toDate(),
   });
 
   const handleAprobarAdmin = async () => {
+    setIsLoading(true);
     backendAdminConsorcios
       .post(`/reclamos/aprobaciones/${detalleReclamo.id}`, postBodyAprobarAdmin)
       .then((response) => {
+        setIsLoading(false);
         showAlertAprobado();
         setTextMotivoRechazo("");
       })
@@ -196,21 +204,17 @@ const DetalleReclamoScreen = (props) => {
                 </Card.Content>
 
                 {/* Si está validado y es ADMIN, puede ver aprobar o rechazar
-                 */}
-                {params.loggedUserInfo.rol == "ADMIN" &&
-                  detalleReclamo.estado == "VALIDADO" && (
-                    <View style={styles.buttonContainer}>
-                      <Button mode="contained" onPress={showDialogAprobar}>
-                        Aprobar
-                      </Button>
-                      <Button
-                        mode="contained"
-                        onPress={showDialogRechazarAdmin}
-                      >
-                        Rechazar
-                      </Button>
-                    </View>
-                  )}
+                 detalleReclamo.estado == "VALIDADO" &&*/}
+                {params.loggedUserInfo.rol == "ADMIN" && (
+                  <View style={styles.buttonContainer}>
+                    <Button mode="contained" onPress={showDialogAprobar}>
+                      Aprobar
+                    </Button>
+                    <Button mode="contained" onPress={showDialogRechazarAdmin}>
+                      Rechazar
+                    </Button>
+                  </View>
+                )}
 
                 {/* Si es nuevo y es INSPEC, puede ver Procesar o Rechazar */}
                 {params.loggedUserInfo.rol == "INSPECTOR" &&
@@ -241,11 +245,11 @@ const DetalleReclamoScreen = (props) => {
       <Portal>
         <Dialog visible={visibleAprobar} onDismiss={hideDialogAprobar}>
           <Dialog.Title>Fecha de resolución</Dialog.Title>
+          <Paragraph>formato DD/MM/YYYY</Paragraph>
           <Dialog.Content>
             <TextInput
-              // label="Email"
-              // value={text}
-              // onChangeText={(text) => setText(text)}
+              value={dateString}
+              onChangeText={(dateString) => setDateString(dateString)}
               style={styles.fechaResolucionReclamo}
             />
           </Dialog.Content>
@@ -260,14 +264,18 @@ const DetalleReclamoScreen = (props) => {
               multiline={true}
             />
           </Dialog.Content>
-          <Dialog.Actions>
-            <Button color="black" onPress={hideDialogAprobar}>
-              Cancel
-            </Button>
-            <Button color="black" onPress={() => handleAprobarAdmin()}>
-              Ok
-            </Button>
-          </Dialog.Actions>
+          {!isLoading ? (
+            <Dialog.Actions>
+              <Button color="black" onPress={hideDialogAprobar}>
+                Cancel
+              </Button>
+              <Button color="black" onPress={() => handleAprobarAdmin()}>
+                Ok
+              </Button>
+            </Dialog.Actions>
+          ) : (
+            <ActivityIndicator animating={true} size={"large"} />
+          )}
         </Dialog>
 
         <Dialog
