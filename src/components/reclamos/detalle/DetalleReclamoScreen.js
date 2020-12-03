@@ -104,7 +104,6 @@ const DetalleReclamoScreen = (props) => {
   const postBodyRechazo = JSON.stringify({
     id: detalleReclamo.id,
     notas: textMotivoRechazo,
-    fechaResolucion: day.toDate(),
   });
 
   const handleAprobarAdmin = async () => {
@@ -112,9 +111,11 @@ const DetalleReclamoScreen = (props) => {
     backendAdminConsorcios
       .post(`/reclamos/aprobaciones/${detalleReclamo.id}`, postBodyAprobarAdmin)
       .then((response) => {
+        console.log(day.toDate());
         setIsLoading(false);
         showAlertAprobado();
-        setTextMotivoRechazo("");
+        setTextNotaAprobacionAdmin("");
+        setDateString("");
       })
       .catch((error) => {
         console.log(error);
@@ -122,9 +123,11 @@ const DetalleReclamoScreen = (props) => {
   };
 
   const handleRechazar = async () => {
+    setIsLoading(true);
     backendAdminConsorcios
       .post(`/reclamos/rechazos/${detalleReclamo.id}`, postBodyRechazo)
       .then((response) => {
+        setIsLoading(false);
         showAlertRechazoAdmin();
         setTextMotivoRechazo("");
       })
@@ -192,7 +195,7 @@ const DetalleReclamoScreen = (props) => {
                   <List.Item
                     title="Fecha de resolución"
                     description={
-                      detalleReclamo.fechaResolucion || "No finalizado"
+                      detalleReclamo.fechaResolucion || "No definida"
                     }
                     left={(props) => (
                       <List.Icon {...props} icon="calendar-check-outline" />
@@ -204,38 +207,39 @@ const DetalleReclamoScreen = (props) => {
                 </Card.Content>
 
                 {/* Si está validado y es ADMIN, puede ver aprobar o rechazar
-                 detalleReclamo.estado == "VALIDADO" &&*/}
-                {params.loggedUserInfo.rol == "ADMIN" && (
+                 */}
+                {params.loggedUserInfo.rol == "ADMIN" &&
+                  detalleReclamo.estado == "VALIDADO" && (
+                    <View style={styles.buttonContainer}>
+                      <Button mode="contained" onPress={showDialogAprobar}>
+                        Aprobar
+                      </Button>
+                      <Button
+                        mode="contained"
+                        onPress={showDialogRechazarAdmin}
+                      >
+                        Rechazar
+                      </Button>
+                    </View>
+                  )}
+
+                {/* Si es nuevo y es INSPEC, puede ver Procesar o Rechazar 
+                detalleReclamo.estado == "NUEVO" &&*/}
+                {params.loggedUserInfo.rol == "INSPECTOR" && (
                   <View style={styles.buttonContainer}>
-                    <Button mode="contained" onPress={showDialogAprobar}>
-                      Aprobar
+                    <Button
+                      mode="contained"
+                      onPress={() => {
+                        handleAccionInspeccionar(detalleReclamo);
+                      }}
+                    >
+                      Procesar
                     </Button>
                     <Button mode="contained" onPress={showDialogRechazarAdmin}>
                       Rechazar
                     </Button>
                   </View>
                 )}
-
-                {/* Si es nuevo y es INSPEC, puede ver Procesar o Rechazar */}
-                {params.loggedUserInfo.rol == "INSPECTOR" &&
-                  detalleReclamo.estado == "NUEVO" && (
-                    <View style={styles.buttonContainer}>
-                      <Button
-                        mode="contained"
-                        onPress={() => {
-                          handleAccionInspeccionar(detalleReclamo);
-                        }}
-                      >
-                        Procesar
-                      </Button>
-                      <Button
-                        mode="contained"
-                        onPress={showDialogRechazarInspec}
-                      >
-                        Rechazar
-                      </Button>
-                    </View>
-                  )}
               </ScrollView>
             </View>
           )}
@@ -274,8 +278,9 @@ const DetalleReclamoScreen = (props) => {
               </Button>
             </Dialog.Actions>
           ) : (
-            <ActivityIndicator animating={true} size={"large"} />
+            <ActivityIndicator animating={true} size={"small"} />
           )}
+          <Paragraph></Paragraph>
         </Dialog>
 
         <Dialog
@@ -293,14 +298,18 @@ const DetalleReclamoScreen = (props) => {
               multiline={true}
             />
           </Dialog.Content>
-          <Dialog.Actions>
-            <Button color="black" onPress={hideDialogRechazarAdmin}>
-              Cancel
-            </Button>
-            <Button color="black" onPress={() => handleRechazar()}>
-              Ok
-            </Button>
-          </Dialog.Actions>
+          {!isLoading ? (
+            <Dialog.Actions>
+              <Button color="black" onPress={hideDialogRechazarAdmin}>
+                Cancel
+              </Button>
+              <Button color="black" onPress={() => handleRechazar()}>
+                Ok
+              </Button>
+            </Dialog.Actions>
+          ) : (
+            <ActivityIndicator animating={true} size={"small"} />
+          )}
         </Dialog>
         <Dialog
           visible={visibleAlertRechazo}
