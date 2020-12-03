@@ -9,6 +9,9 @@ const UltReclamosScreen = (props) => {
     const [isLoading, setIsLoading] = React.useState(true);
     const { loggedUserInfo } = props;
 
+    if(loggedUserInfo.rol === "ADMIN")
+    loggedUserInfo.persona.id = loggedUserInfo.edificios[0].id;
+
     const buildUrlReclamos = () => {
         if (loggedUserInfo.rol === "USER") {
             return '/reclamos/viviente/';
