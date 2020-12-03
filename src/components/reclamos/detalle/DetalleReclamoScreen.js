@@ -55,7 +55,6 @@ const DetalleReclamoScreen = (props) => {
   const [visibleAlertAprobado, setVisibleAlertAprobado] = React.useState(false);
   const showAlertAprobado = () => {
     setVisibleAlertAprobado(true);
-    console.log("Aprobado por administrador");
   };
   const hideAlertAprobado = (reclamo) => {
     setVisibleAlertAprobado(false);
@@ -88,6 +87,20 @@ const DetalleReclamoScreen = (props) => {
     console.log("Reclamo a inspeccionar");
     props.navigation.navigate("Reclamos a validar", { reclamo: reclamo });
   };
+
+  const postBody = JSON.stringify({
+    id: detalleReclamo.id,
+  });
+
+  const handleAprobarAdmin = async () => {
+    backendAdminConsorcios
+      .post(`/reclamos/aprobaciones/${detalleReclamo.id}`, postBody)
+      .then((response) => {
+        showAlertAprobado();
+      }).catch((error) => {
+        console.log(error);
+      });
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -161,7 +174,7 @@ const DetalleReclamoScreen = (props) => {
                 </Card.Content>
 
                 {/* Si está validado y es ADMIN, puede ver aprobar o rechazar */}
-                {props.userInfo.tipo == "ADMIN" &&
+                {params.loggedUserInfo.rol == "ADMIN" &&
                   detalleReclamo.estado == "VALIDADO" && (
                     <View style={styles.buttonContainer}>
                       <Button mode="contained" onPress={showDialogAprobar}>
@@ -177,7 +190,7 @@ const DetalleReclamoScreen = (props) => {
                   )}
 
                 {/* Si es nuevo y es INSPEC, puede ver Procesar o Rechazar */}
-                {props.userInfo.tipo == "INSPECTOR" &&
+                {params.loggedUserInfo.rol == "INSPECTOR" &&
                   detalleReclamo.estado == "NUEVO" && (
                     <View style={styles.buttonContainer}>
                       <Button
@@ -251,7 +264,7 @@ const DetalleReclamoScreen = (props) => {
             <Button color="black" onPress={hideDialogAprobar}>
               Cancel
             </Button>
-            <Button color="black" onPress={showAlertAprobado}>
+            <Button color="black" onPress={() => handleAprobarAdmin()}>
               Ok
             </Button>
           </Dialog.Actions>
