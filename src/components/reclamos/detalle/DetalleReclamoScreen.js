@@ -32,6 +32,8 @@ const DetalleReclamoScreen = (props) => {
   const showDialogRechazarInspec = () => setVisibleRechazarInspec(true);
   const hideDialogRechazarInspec = () => setVisibleRechazarInspec(false);
 
+  const [textMotivoRechazo, setTextMotivoRechazo] = React.useState("");
+
   const [visibleAprobar, setVisibleAprobar] = React.useState(false);
   const showDialogAprobar = () => setVisibleAprobar(true);
   const hideDialogAprobar = () => setVisibleAprobar(false);
@@ -61,6 +63,7 @@ const DetalleReclamoScreen = (props) => {
     hideDialogAprobar();
     props.navigation.navigate("Detalle", { reclamo: reclamo })
   };
+
 
   useEffect(() => {
     const obtenerReclamos = async ({ reclamo }) => {
@@ -92,11 +95,26 @@ const DetalleReclamoScreen = (props) => {
     id: detalleReclamo.id,
   });
 
+  const postBodyRechazo = JSON.stringify({
+    id: detalleReclamo.id,
+    notas: textMotivoRechazo,
+  });
+
   const handleAprobarAdmin = async () => {
     backendAdminConsorcios
       .post(`/reclamos/aprobaciones/${detalleReclamo.id}`, postBody)
       .then((response) => {
         showAlertAprobado();
+      }).catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const handleRechazar = async () => {
+    backendAdminConsorcios
+      .post(`/reclamos/rechazos/${detalleReclamo.id}`, postBodyRechazo)
+      .then((response) => {
+        showAlertRechazoAdmin();
       }).catch((error) => {
         console.log(error);
       });
@@ -223,9 +241,8 @@ const DetalleReclamoScreen = (props) => {
           <Dialog.Title>Motivo de rechazo</Dialog.Title>
           <Dialog.Content>
             <TextInput
-              // label="Email"
-              // value={text}
-              // onChangeText={(text) => setText(text)}
+              value={textMotivoRechazo}
+              onChangeText={(textMotivoRechazo) => setTextMotivoRechazo(textMotivoRechazo)}
               style={styles.comentarioResolucionReclamo}
               multiline={true}
             />
@@ -288,7 +305,7 @@ const DetalleReclamoScreen = (props) => {
             <Button color="black" onPress={hideDialogRechazarAdmin}>
               Cancel
             </Button>
-            <Button color="black" onPress={showAlertRechazoAdmin}>
+            <Button color="black" onPress={() => handleRechazar()}>
               Ok
             </Button>
           </Dialog.Actions>
