@@ -5,7 +5,7 @@ import { Divider, List, Subheading, Text } from 'react-native-paper';
 const ReclamosAbiertosList = (props) => {
 
     const handleDetalle = (reclamo) => {
-        props.navigation.navigate("Detalle", { reclamo: reclamo })
+        props.navigation.navigate("Detalle", { reclamo: reclamo, loggedUserInfo: props.loggedUserInfo })
     }
 
     if (props.reclamos.length > 0) {

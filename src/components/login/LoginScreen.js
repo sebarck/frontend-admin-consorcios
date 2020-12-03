@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Image, ImageBackground, Alert } from 'react-native';
 import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
@@ -12,6 +12,12 @@ const LoginScreen = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [loggedUserInfo, setLoggedUserInfo] = useState("");
 
+    useEffect(() => {
+        if (loggedUserInfo != "")
+        navigation.navigate("Inicio", { loggedUserInfo: loggedUserInfo });
+
+    }, [loggedUserInfo]);
+
     const handleLogin = () => {
         setIsLoading(true);
         const authHeader = 'Basic ' + base64.encode(`${userText}:${userPassword}`);
@@ -22,7 +28,6 @@ const LoginScreen = ({ navigation }) => {
             .then((response) => {
                 if (typeof(response.data.id) != 'undefined') {
                     setLoggedUserInfo(response.data);
-                    navigation.navigate("Inicio", { loggedUserInfo: loggedUserInfo });
                 } else {
                     Alert.alert(
                         "Ups! Hubo un problema!",

@@ -7,11 +7,12 @@ import ReclamosAbiertosList from './listado/ReclamosAbiertosList';
 const UltReclamosScreen = (props) => {
     const [reclamosEnCurso, setReclamosEnCurso] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
+    const { loggedUserInfo } = props;
 
-    const buildUrlReclamos = (props) => {
-        if (props.userInfo.tipo === "USER") {
+    const buildUrlReclamos = () => {
+        if (loggedUserInfo.rol === "USER") {
             return '/reclamos/viviente/';
-        } else if (props.userInfo.tipo === "ADMIN") {
+        } else if (loggedUserInfo.rol === "ADMIN") {
             return '/reclamos/administrador/';
         } else {
             return '/reclamos/inspector/';
@@ -27,11 +28,11 @@ const UltReclamosScreen = (props) => {
     }
 
     useEffect(() => {
-        var url = buildUrlReclamos(props);
+        var url = buildUrlReclamos();
         var options = optionsBuilder(props);
-        const obtenerReclamos = async ({ userInfo }) => {
+        const obtenerReclamos = async (loggedUserInfo) => {
             backendAdminConsorcios
-                .get(url + userInfo.idViviente + options)
+                .get(url + loggedUserInfo.persona.id + options)
                 .then((response) => {
                     setReclamosEnCurso(response.data);
                 })
@@ -40,7 +41,7 @@ const UltReclamosScreen = (props) => {
                 })
                 .finally(() => setIsLoading(false));
         };
-        obtenerReclamos(props);
+        obtenerReclamos(loggedUserInfo);
 
         return () => {
             setReclamosEnCurso([]);
@@ -60,7 +61,11 @@ const UltReclamosScreen = (props) => {
                             <ActivityIndicator animating={true} color={Colors.red800} size={"small"} />
                         </View>
                     )
-                    : <ReclamosAbiertosList reclamos={reclamosEnCurso} cantVisible={props.cantVisible} navigation={props.navigation} />
+                    : <ReclamosAbiertosList
+                        reclamos={reclamosEnCurso}
+                        cantVisible={props.cantVisible}
+                        navigation={props.navigation}
+                        loggedUserInfo={loggedUserInfo} />
                 }
             </List.Section>
         </ScrollView>

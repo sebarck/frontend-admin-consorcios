@@ -8,18 +8,14 @@ import CrearReclamoScreen from "./reclamos/CrearReclamoScreen";
 import InspeccionarReclamoScreen from "./reclamos/InspeccionarReclamoScreen";
 import {
   createDrawerNavigator,
-  DrawerContentScrollView,
 } from "@react-navigation/drawer";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import messaging from "@react-native-firebase/messaging";
 import DetalleReclamoScreen from "./reclamos/detalle/DetalleReclamoScreen";
 import LoginScreen from "./login/LoginScreen";
 
-const loggedUserInfo = {
+const loggedUserInfoHardcoded = {
   idViviente: 1,
-  nombre: "Sebastian",
-  apellido: "Monti",
-  dni: 36826858,
   tipo: "USER",
 };
 
@@ -55,12 +51,12 @@ export default function App() {
         <NavigationContainer>
           <Drawer.Navigator initialRouteName="Login">
             <Drawer.Screen name="Inicio">
-              {(props) => <HomeScreen {...props} userInfo={loggedUserInfo} />}
+              {(props) => <HomeScreen {...props} userInfo={loggedUserInfoHardcoded} />}
             </Drawer.Screen>
             <Drawer.Screen name="Login">
-              {props => <LoginScreen {...props} userInfo={loggedUserInfo} />}
+              {props => <LoginScreen {...props} />}
             </Drawer.Screen>
-            {loggedUserInfo.tipo == "USER" && (
+            {loggedUserInfoHardcoded.tipo == "USER" && (
               <Drawer.Screen
                 name="Crear reclamo"
                 component={CrearReclamoScreen}
@@ -68,12 +64,12 @@ export default function App() {
             )}
             <Drawer.Screen name="Listado reclamos">
               {(props) => (
-                <ReclamosScreen {...props} userInfo={loggedUserInfo} />
+                <ReclamosScreen {...props} userInfo={loggedUserInfoHardcoded} />
               )}
             </Drawer.Screen>
 
             {/* Si es usuario, no puede aprobar reclamos */}
-            {!(loggedUserInfo.tipo == "USER") && (
+            {!(loggedUserInfoHardcoded.tipo == "USER") && (
               <Drawer.Screen
                 name="Aprobacion reclamos"
                 component={AprobarReclamoScreen}
@@ -81,7 +77,7 @@ export default function App() {
             )}
 
             {/* Si es usuario, no puede inspeccionar reclamos */}
-            {!(loggedUserInfo.tipo == "USER") && (
+            {!(loggedUserInfoHardcoded.tipo == "USER") && (
               <Drawer.Screen
                 name="Reclamos a validar"
                 component={InspeccionarReclamoScreen}
@@ -92,7 +88,7 @@ export default function App() {
               name="Detalle"
               options={{ drawerLabel: "Detalle Reclamos" }}
             >
-              {(props) => <DetalleReclamoScreen {...props} userInfo={loggedUserInfo}/>}
+              {(props) => <DetalleReclamoScreen {...props} userInfo={loggedUserInfoHardcoded}/>}
             </Drawer.Screen>
           </Drawer.Navigator>
         </NavigationContainer>
