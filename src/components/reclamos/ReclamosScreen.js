@@ -5,6 +5,7 @@ import ChipsFiltrosEstado from './listado/ChipsFiltrosEstado';
 import UltReclamosScreen from './UltReclamosScreen';
 
 const ReclamosScreen = (props) => {
+    const { loggedUserInfo } = props.route.params;
     const [estadoFilter, setEstadoFilter] = React.useState("");
 
     const handleFilter = (estado) => {
@@ -20,7 +21,12 @@ const ReclamosScreen = (props) => {
             <Title style={{ padding: 10 }}>Listado de reclamos</Title>
             <Subheading style={{ padding: 10 }}>Filtros por estado</Subheading>
             <ChipsFiltrosEstado onPressFun={handleFilter} />
-            <UltReclamosScreen userInfo={props.userInfo} cantVisible={100} navigation={props.navigation} filter={estadoFilter} />
+            <UltReclamosScreen
+                userInfo={props.userInfo}
+                cantVisible={100}
+                navigation={props.navigation}
+                filter={estadoFilter}
+                loggedUserInfo={loggedUserInfo} />
         </ScrollView>
     );
 }

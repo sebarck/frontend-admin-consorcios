@@ -34,7 +34,7 @@ const HomeScreen = ({ navigation, userInfo, route }) => {
       />
       <Button
         mode="contained"
-        onPress={() => navigation.navigate("Listado reclamos")}
+        onPress={() => navigation.navigate("Listado reclamos", { loggedUserInfo: loggedUserInfo })}
       >
         Ver todos
       </Button>
