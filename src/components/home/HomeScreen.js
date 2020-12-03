@@ -40,7 +40,7 @@ const HomeScreen = ({ navigation, userInfo, route }) => {
       </Button>
 
       {/* Solo el usuario puede "Crear nuevo reclamo" */}
-      {(userInfo.tipo === "USER") && (
+      {(loggedUserInfo.tipo === "USER") && (
         <FAB
           style={style.fab}
           label="Crear nuevo reclamo"
