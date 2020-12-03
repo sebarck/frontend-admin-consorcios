@@ -43,6 +43,8 @@ const LoginScreen = ({ navigation }) => {
                 );
             })
             .finally(() => {
+                setUserPassword("");
+                setUserText("");
                 setIsLoading(false);
             });
     }
